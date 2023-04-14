@@ -46,7 +46,6 @@ class CircularObstacle(Obstacle):
 
     def is_within_obs(self, node: Node):
         """Takes a Node object and returns True if the node is within the circle"""
-        assert hasattr(node, "x") and hasattr(node, "y"), "Node object must have x and y attributes"
         dist = np.sqrt((self.x - node.x)**2 + (self.y - node.y)**2)
         return dist < self.r
 
@@ -73,6 +72,5 @@ class AxisAlignedRectObstacle(Obstacle):
 
     def is_within_obs(self, node: Node):
         """Takes a Node object and returns True if the node is within the rectangle"""
-        assert hasattr(node, "x") and hasattr(node, "y"), "Node object must have x and y attributes"
         return (self.x_bl < node.x < self.x_bl + self.lx) and (self.y_bl < node.y < self.y_bl + self.ly)
 
