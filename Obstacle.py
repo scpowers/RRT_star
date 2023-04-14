@@ -1,12 +1,12 @@
 from abc import ABC, abstractmethod
-from Node import Node, XYThetaNode
+from Node import Node
 import numpy as np
 
 
 class Obstacle(ABC):
     @abstractmethod
-    def is_within_obs(self, node: Node):
-        pass
+    def is_within_obs(self, node: Node) -> bool:
+        return True
 
 
 class CircularObstacle(Obstacle):
@@ -18,4 +18,15 @@ class CircularObstacle(Obstacle):
     def is_within_obs(self, node: Node):
         dist = np.sqrt((self.x - node.x)**2 + (self.y - node.y)**2)
         return dist < self.r
+
+
+class AxisAlignedRectObstacle(Obstacle):
+    def __init__(self, x_bl, y_bl, lx, ly):
+        self.x_bl = x_bl
+        self.y_bl = y_bl
+        self.lx = lx
+        self.ly = ly
+
+    def is_within_obs(self, node: Node):
+        return (self.x_bl < node.x < self.x_bl + self.lx) and (self.y_bl < node.y < self.y_bl + self.ly)
 
