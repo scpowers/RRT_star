@@ -1,6 +1,8 @@
 from abc import ABC, abstractmethod
 from Node import Node
-import numpy as np
+from sympy.geometry.ellipse import Circle
+from sympy.geometry.point import Point
+from sympy.geometry.polygon import Polygon
 
 
 class Obstacle(ABC):
@@ -40,37 +42,25 @@ class CircularObstacle(Obstacle):
             r: **double or int**
                 radius of circle
         """
-        self.x = x
-        self.y = y
-        self.r = r
+        self.Circle = Circle(Point(x, y), r)
 
     def is_within_obs(self, node: Node):
         """Takes a Node object and returns True if the node is within the circle"""
-        dist = np.sqrt((self.x - node.x)**2 + (self.y - node.y)**2)
-        return dist < self.r
+        return self.Circle.center.distance(node.Point) < self.Circle.radius
 
 
-class AxisAlignedRectObstacle(Obstacle):
-    def __init__(self, x_bl, y_bl, lx, ly):
+class PolygonObstacle(Obstacle):
+    def __init__(self, *points):
         """
         Constructor for axis-aligned rectangular obstacle.
 
         Args:
-            x_bl: **double or int**
-                x-coordinate of bottom-left corner of rectangle
-            y_bl: **double or int**
-                y-coordinate of bottom-left corner of rectangle
-            lx: **double or int**
-                length of side of rectangle along x-axis
-            ly: **double or int**
-                length of side of rectangle along y-axis
+            *points: **sequence of tuples**
+                Sequence of points (as tuples) that define the vertices of the polygon
         """
-        self.x_bl = x_bl
-        self.y_bl = y_bl
-        self.lx = lx
-        self.ly = ly
+        self.Polygon = Polygon(*points)
 
     def is_within_obs(self, node: Node):
-        """Takes a Node object and returns True if the node is within the rectangle"""
-        return (self.x_bl < node.x < self.x_bl + self.lx) and (self.y_bl < node.y < self.y_bl + self.ly)
+        """Takes a Node object and returns True if the node is within the polygon"""
+        return self.Polygon.encloses_point(node.Point)
 
