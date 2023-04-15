@@ -1,6 +1,7 @@
 import numpy as np
 from params import *
 from sympy import Point
+import matplotlib.pyplot as plt
 
 
 class Node:
@@ -27,9 +28,13 @@ class Node:
         self.parent = None
         self.cost_to_come = np.inf
         self.path_to_parent = None
+        self.plotting_object = np.array(states)
 
     def dist_to_node(self, node):
         return self.Point.distance(node.Point)
+
+    def plot_node(self):
+        pass
 
 
 class XYThetaNode(Node):
@@ -70,3 +75,7 @@ class XYThetaNode(Node):
     def dist_to_node(self, node):
         """Get distance metric to a given node. The Euclidean distance was chosen for this node type."""
         return self.Point.distance(node.Point)
+
+    def plot_node(self):
+        plt.arrow(self.plotting_object[0], self.plotting_object[1],
+                  ARROW_LENGTH * np.cos(self.yaw), ARROW_LENGTH * np.sin(self.yaw), width=0.1, facecolor='g')
