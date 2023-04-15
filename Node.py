@@ -69,4 +69,4 @@ class XYThetaNode(Node):
 
     def dist_to_node(self, node):
         """Get distance metric to a given node. The Euclidean distance was chosen for this node type."""
-        super().dist_to_node(node)
+        return self.Point.distance(node.Point)
