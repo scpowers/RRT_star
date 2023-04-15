@@ -1,5 +1,6 @@
 import numpy as np
 from params import *
+from sympy.geometry.point import Point
 
 
 class Node:
@@ -7,8 +8,7 @@ class Node:
     Base class for nodes.
 
     ** Attributes **
-        x: x-coordinate of vehicle
-        y: y-coordinate of vehicle
+        Point: Point object corresponding to position in state space
         parent: Node object that is this node's parent in the tree
         cost_to_come: cost to travel to this node via its parents from the root
         path_to_parent: array(s) of points describing the trajectory from the parent to this node in state space
@@ -16,28 +16,20 @@ class Node:
     ** Methods **
         dist_to_node: get Euclidean distance to a given Node
     """
-    def __init__(self, x=None, y=None):
+    def __init__(self, states):
         """
         Parameter constructor for general node.
 
         Args:
-            x: **double or int**
-                x-coordinate of vehicle
-            y: **double or int**
-                y-coordinate of vehicle
         """
-        if x is None:
-            x = np.random.uniform(MAP_X_MIN, MAP_X_MAX)
-        if y is None:
-            y = np.random.uniform(MAP_Y_MIN, MAP_Y_MAX)
-        self.x = x
-        self.y = y
+        assert len(states) >= 2, "Must have at least two state variables"
+        self.Point = Point(states)
         self.parent = None
         self.cost_to_come = np.inf
         self.path_to_parent = None
 
     def dist_to_node(self, node):
-        return np.sqrt((self.x - node.x)**2 + (self.y - node.y)**2)
+        return self.Point.distance(node.Point)
 
 
 class XYThetaNode(Node):
@@ -45,8 +37,7 @@ class XYThetaNode(Node):
     class for x-y-theta nodes.
 
     ** Attributes **
-        x: x-coordinate of vehicle
-        y: y-coordinate of vehicle
+        Point: Point object corresponding to x-y position
         yaw: heading in x-y plane
         parent: Node object that is this node's parent in the tree
         cost_to_come: cost to travel to this node via its parents from the root
@@ -67,9 +58,13 @@ class XYThetaNode(Node):
             theta: **double or int**
                 heading of vehicle on x-y plane (in radians)
         """
-        super().__init__(x, y)
+        if x is None:
+            x = np.random.uniform(MAP_X_MIN, MAP_X_MAX)
+        if y is None:
+            y = np.random.uniform(MAP_Y_MIN, MAP_Y_MAX)
         if theta is None:
             theta = np.random.uniform(YAW_MIN, YAW_MAX)
+        super().__init__([x, y])
         self.yaw = theta
 
     def dist_to_node(self, node):
