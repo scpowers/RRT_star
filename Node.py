@@ -1,6 +1,6 @@
 import numpy as np
 from params import *
-from sympy.geometry.point import Point
+from sympy import Point
 
 
 class Node:

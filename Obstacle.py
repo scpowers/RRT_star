@@ -1,8 +1,6 @@
 from abc import ABC, abstractmethod
 from Node import Node
-from sympy.geometry.ellipse import Circle
-from sympy.geometry.point import Point
-from sympy.geometry.polygon import Polygon
+from sympy import Circle, Point, Polygon
 
 
 class Obstacle(ABC):
