@@ -1,5 +1,11 @@
 import numpy as np
 
+# global params
+N_NODES = 10
+
+# state plotting params
+ARROW_LENGTH = 0.2
+
 # parameters for sampling nodes
 MAP_X_MIN = 0
 MAP_X_MAX = 10
