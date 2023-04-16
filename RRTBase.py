@@ -2,6 +2,7 @@ from Node import *
 from Obstacle import *
 from abc import ABC, abstractmethod
 import numpy as np
+from params import N_NODES
 
 
 class RRTBase(ABC):
@@ -36,6 +37,14 @@ class RRTBase(ABC):
     def get_nearest_node_idx(self, node: Node):
         """Get index of the node closest to the given node within the tree"""
         return np.argmin([node.dist_to_node(node2) for node2 in self.T])
+
+    def build_tree(self):
+        for i in range(N_NODES):
+            self.add_node()
+        if not self.found_solution:
+            print('No path to goal found.')
+        else:
+            print('Found a path to the goal!')
 
 
 
