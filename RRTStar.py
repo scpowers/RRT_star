@@ -27,9 +27,12 @@ class RRTStar(RRTBase):
         nearby_idxs = self.get_nearby_node_idxs(new_node)
 
         # choose the best parent node for the new node, not just choosing the nearest one like RRT
-        #print(f'new node is originally at {new_node.plotting_object}')
         (new_node, best_parent_index) = self.choose_best_parent(rand_node, new_node, nearby_idxs)
-        #print(f'new node is now at {new_node.plotting_object} with parent index {best_parent_index}')
+
+        # set flag saying that a solution has been found if the new node from steer is close to the goal node
+        if self.is_close_to_goal(new_node) and self.goal_solution is None:
+            self.goal_solution = new_node
+            new_node.is_goal = True
         self.T.append(new_node)
 
         # rewire
