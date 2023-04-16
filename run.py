@@ -2,12 +2,14 @@ from RRTBase import *
 import numpy as np
 from utilities import steer
 import matplotlib.pyplot as plt
+from RRT import RRT
 
+circ_obs = CircularObstacle(4, 4, 1)
+rect_obs = PolygonObstacle((3, 0), (4, 0), (4, 1), (3, 1))
+circ2_obs = CircularObstacle(9, 9, 1)
+
+"""
 node1 = XYThetaNode(0.0, 0.0, 0.0)
-circ_obs = CircularObstacle(-1, -1, 1)
-rect_obs = PolygonObstacle((0, 0), (1, 0), (1, 1), (0, 1))
-circ2_obs = CircularObstacle(5, 5, 1)
-
 print(f'node 1 is within first circular obstacle: {circ_obs.is_within_obs(node1)}')
 print(f'node 1 is within second circular obstacle: {circ_obs.is_within_obs(node1)}')
 print(f'node 1 is within polygon obstacle: {rect_obs.is_within_obs(node1)}')
@@ -33,4 +35,15 @@ plt.xlim(-5, 5)
 plt.ylim(-5, 5)
 plt.axis('equal')
 plt.show()
-
+"""
+"""
+q_start = [5, 5, 0]
+q_goal = [1, 8, 0]
+"""
+q_start = [0, 0, 0]
+q_goal = [7, 7, 0]
+obs = [circ_obs, rect_obs, circ2_obs]
+#obs = []
+rrt = RRT(q_start, q_goal, obs)
+rrt.build_tree()
+rrt.visualize_tree()
