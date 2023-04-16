@@ -71,11 +71,23 @@ class XYThetaNode(Node):
             theta = np.random.uniform(YAW_MIN, YAW_MAX)
         super().__init__([x, y])
         self.yaw = theta
+        self.is_goal = False
 
     def dist_to_node(self, node):
         """Get distance metric to a given node. The Euclidean distance was chosen for this node type."""
         return self.Point.distance(node.Point)
 
     def plot_node(self):
-        plt.arrow(self.plotting_object[0], self.plotting_object[1],
-                  ARROW_LENGTH * np.cos(self.yaw), ARROW_LENGTH * np.sin(self.yaw), width=0.1, facecolor='g')
+        """
+        if self.is_goal:
+            plt.arrow(self.plotting_object[0], self.plotting_object[1],
+                      ARROW_LENGTH * np.cos(self.yaw), ARROW_LENGTH * np.sin(self.yaw), width=0.1, facecolor='m')
+        else:
+            plt.arrow(self.plotting_object[0], self.plotting_object[1],
+                      ARROW_LENGTH * np.cos(self.yaw), ARROW_LENGTH * np.sin(self.yaw), width=0.1, facecolor='g')
+        """
+        if self.is_goal:
+            plt.plot(self.plotting_object[0], self.plotting_object[1], color='m', marker='o')
+        else:
+            #plt.plot(self.plotting_object[0], self.plotting_object[1], color='g', marker='.')
+            pass
