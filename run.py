@@ -3,6 +3,7 @@ import numpy as np
 from utilities import steer
 import matplotlib.pyplot as plt
 from RRT import RRT
+from RRTStar import RRTStar
 
 circ_obs = CircularObstacle(4, 4, 1)
 rect_obs = PolygonObstacle((3, 0), (4, 0), (4, 1), (3, 1))
@@ -35,15 +36,15 @@ plt.xlim(-5, 5)
 plt.ylim(-5, 5)
 plt.axis('equal')
 plt.show()
-"""
-"""
 q_start = [5, 5, 0]
 q_goal = [1, 8, 0]
 """
 q_start = [0, 0, 0]
 q_goal = [7, 7, 0]
+"""
+"""
 obs = [circ_obs, rect_obs, circ2_obs]
 #obs = []
-rrt = RRT(q_start, q_goal, obs)
+rrt = RRTStar(q_start, q_goal, obs)
 rrt.build_tree()
 rrt.visualize_tree()
