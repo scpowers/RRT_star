@@ -54,9 +54,12 @@ class RRTBase(ABC):
 
     def visualize_tree(self):
         fig, ax = plt.subplots()
-        [ax.add_patch(obs.plotting_object) for obs in self.obs]
-        [node.plot_node() for node in self.T]
-        [plt.plot(node.path_to_parent[0][0, :], node.path_to_parent[0][1, :], color='k') for node in self.T[1:]]
+        for obs in self.obs:
+            ax.add_patch(obs.plotting_object)
+        for i, node in enumerate(self.T):
+            node.plot_node()
+            if i > 0:
+                plt.plot(node.path_to_parent[0][0, :], node.path_to_parent[0][1, :], color='k')
         if self.goal_solution is None:
             self.goal.plot_node()
         else:
