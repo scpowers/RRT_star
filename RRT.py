@@ -7,13 +7,15 @@ from params import GOAL_BIAS
 class RRT(RRTBase):
 
     def add_node(self):
+        # goal biasing process
         rand = np.random.uniform()
         if rand < GOAL_BIAS:
             rand_node = self.goal
         else:
             rand_node = self.sample_free()
-            if self.is_close_to_goal(rand_node):
+            if self.is_close_to_goal(rand_node):  # if the randomly selected node is close to the goal, just use goal
                 rand_node = self.goal
+
         nearest_node = self.T[self.get_nearest_node_idx(rand_node)]
         new_node = steer(nearest_node, rand_node)
         # skip if rand_node node is too close to nearest node or the generated path goes through an obstacle
