@@ -27,3 +27,7 @@ HEADING_DIFF_COEFF = 0.1
 
 # goal node checking params
 GOAL_DIST_THRESHOLD = 0.1
+
+# RRT* params
+GAMMA_STAR = 5
+NEAR_DIST_THRESHOLD = 0.5  # can be at most MAX_STEP
