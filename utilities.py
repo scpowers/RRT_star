@@ -24,7 +24,7 @@ def steer(near_node: XYThetaNode, rand_node: XYThetaNode):
     dy = rand_node_coords[1] - near_node_coords[1]
     new_coords = [near_node_coords[0] + dx, near_node_coords[1] + dy]
     if dist > MAX_STEP:
-        scale = MAX_STEP / dist
+        scale = float(MAX_STEP / dist)
         new_coords = [near_node_coords[0] + scale*dx, near_node_coords[1] + scale*dy]
     new_node = XYThetaNode(new_coords[0], new_coords[1], new_heading)
 
