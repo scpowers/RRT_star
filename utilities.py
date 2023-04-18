@@ -2,7 +2,6 @@ import numpy as np
 from Node import XYThetaNode
 from params import MAX_STEP, MIN_STEP, YAW_DIFF_THRESHOLD, PATH_LINSPACE_N, EUCLIDEAN_DIST_COEFF, HEADING_DIFF_COEFF
 from sympy import Segment, Point
-import matplotlib.pyplot as plt
 
 
 def steer(near_node: XYThetaNode, rand_node: XYThetaNode):
@@ -51,3 +50,5 @@ def path_cost(path):
     euclidean_dist_cost = EUCLIDEAN_DIST_COEFF * np.sqrt((path[0, -1] - path[0, 0])**2 + (path[1, -1] - path[1, 0])**2)
     heading_diff_cost = HEADING_DIFF_COEFF * abs(path[2, -1] - path[2, 0])
     return euclidean_dist_cost + heading_diff_cost
+
+
