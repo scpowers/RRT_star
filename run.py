@@ -54,7 +54,8 @@ rrt.visualize_tree()
 
 state0 = np.array([0.0, 5.0, 0]).reshape(-1, 1)
 statef = np.array([5.0, 2.5, 0]).reshape(-1, 1)
-path = generate_trajectory(state0, statef)
+path, collision_object = generate_trajectory_function(state0, statef)
+print(f'curve length: {float(collision_object.length)}')
 plt.plot(path[0, :], path[1, :])
 plt.show()
 

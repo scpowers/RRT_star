@@ -1,7 +1,8 @@
 import numpy as np
+from params import MAX_STEP, MIN_STEP
+from sympy import Curve
 from Node import XYThetaNode
-from params import MAX_STEP, MIN_STEP, YAW_DIFF_THRESHOLD, PATH_LINSPACE_N, EUCLIDEAN_DIST_COEFF, HEADING_DIFF_COEFF
-from sympy import Segment, Point
+from OtherUtilities import generate_trajectory_function
 
 
 def steer(near_node: XYThetaNode, rand_node: XYThetaNode):
@@ -10,45 +11,30 @@ def steer(near_node: XYThetaNode, rand_node: XYThetaNode):
     if dist < MIN_STEP:
         return None
 
-    near_node_coords = list(map(float, near_node.Point.coordinates))
-    rand_node_coords = list(map(float, rand_node.Point.coordinates))
-
-    # compute ideal path heading (line connecting near_node to rand_node), and if this heading is too different
-    # from near_node's heading, then make it as far in the right direction as possible
-    new_heading = rand_node.yaw
-    # TODO: enforce heading difference limits (see theta1 and theta2 in sketch)
+    near_node_coords = np.array(list(map(float, near_node.Point.coordinates))).reshape(-1, 1)
+    rand_node_coords = np.array(list(map(float, rand_node.Point.coordinates))).reshape(-1, 1)
 
     # if the distance between nodes is too large, move as much as you can in the correct direction
     dx = rand_node_coords[0] - near_node_coords[0]
     dy = rand_node_coords[1] - near_node_coords[1]
-    new_coords = [near_node_coords[0] + dx, near_node_coords[1] + dy]
     if dist > MAX_STEP:
         scale = float(MAX_STEP / dist)
-        new_coords = [near_node_coords[0] + scale*dx, near_node_coords[1] + scale*dy]
-    new_node = XYThetaNode(new_coords[0], new_coords[1], new_heading)
+        new_coords = near_node_coords + np.array([scale*dx, scale*dy, 0]).reshape(-1, 1)
+    else:
+        new_coords = rand_node_coords
 
-    # generate straight paths in state space to reach new_node
-    x_path = np.linspace(near_node_coords[0], new_coords[0], num=PATH_LINSPACE_N)
-    y_path = np.linspace(near_node_coords[1], new_coords[1], num=PATH_LINSPACE_N)
-    theta_path = np.linspace(near_node.yaw, new_heading, num=PATH_LINSPACE_N)
-    new_path = np.flip(np.vstack((x_path, y_path, theta_path)), 1)  # flipping to go backwards towards parent
-
-    # generate Line object corresponding to the x-y components for collision checking
-    p1 = Point(x_path[-1], y_path[-1])  # going backwards
-    p2 = Point(x_path[0], y_path[0])
-    new_path_collision_object = Segment(p1, p2)
+    # generate trajectory to new coordinates from near node and associated Curve object for collision checking
+    path, collision_object = generate_trajectory_function(near_node_coords, new_coords)
 
     # populate attributes of new_node
-    new_node.parent = near_node
-    new_node.cost_to_come = near_node.cost_to_come + path_cost(new_path)
-    new_node.path_to_parent = (new_path, new_path_collision_object)
+    #new_node.parent = near_node
+    #new_node.cost_to_come = near_node.cost_to_come + path_cost(new_path)
+    #new_node.path_to_parent = (new_path, new_path_collision_object)
 
-    return new_node
+    return path, collision_object
 
 
-def path_cost(path):
-    euclidean_dist_cost = EUCLIDEAN_DIST_COEFF * np.sqrt((path[0, -1] - path[0, 0])**2 + (path[1, -1] - path[1, 0])**2)
-    heading_diff_cost = HEADING_DIFF_COEFF * abs(path[2, -1] - path[2, 0])
-    return euclidean_dist_cost + heading_diff_cost
+def path_cost(path: Curve):
+    return path.length
 
 
