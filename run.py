@@ -5,11 +5,14 @@ import matplotlib.pyplot as plt
 #from RRT import RRT
 from Obstacle import *
 from RRTStar import RRTStar
+from RRT import RRT
 from OtherUtilities import *
+from utilities import path_cost
+from Node import XYThetaNode
 
-circ_obs = CircularObstacle(4, 4, 1)
-rect_obs = PolygonObstacle((3, 0), (4, 0), (4, 1), (3, 1))
-circ2_obs = CircularObstacle(9, 9, 1)
+circ_obs = CircularObstacle(40, 40, 10)
+rect_obs = PolygonObstacle((30, 0), (40, 0), (40, 10), (30, 10))
+circ2_obs = CircularObstacle(90, 90, 5)
 
 """
 node1 = XYThetaNode(0.0, 0.0, 0.0)
@@ -42,20 +45,31 @@ q_start = [5, 5, 0]
 q_goal = [1, 8, 0]
 """
 
-"""
 q_start = [0, 0, 0]
-q_goal = [7, 7, 0]
+q_goal = [70, 70, 0]
 obs = [circ_obs, rect_obs, circ2_obs]
 #obs = []
-rrt = RRTStar(q_start, q_goal, obs)
+rrt = RRT(q_start, q_goal, obs)
 rrt.build_tree()
 rrt.visualize_tree()
-"""
 
-state0 = np.array([0.0, 5.0, 0]).reshape(-1, 1)
-statef = np.array([5.0, 2.5, 0]).reshape(-1, 1)
-path, collision_object = generate_trajectory_function(state0, statef)
-print(f'curve length: {float(collision_object.length)}')
-plt.plot(path[0, :], path[1, :])
+"""
+state0 = np.array([0.0, 5.0, 0.0]).reshape(-1, 1)
+statef = np.array([5.0, 2.5, 0.0]).reshape(-1, 1)
+path, collision_objects, controls, valid_path = generate_trajectory_function(state0, statef)
+print(f'is path valid? {valid_path}')
+print(f'path cost: {path_cost(collision_objects)}')
+print(f'circ object collision check: {circ_obs.line_collision_check(collision_objects)}')
+
+plt.figure()
+plt.plot(range(len(controls[0, :])), controls[0, :])
+plt.plot(range(len(controls[1, :])), controls[1, :])
 plt.show()
+
+fig, ax = plt.subplots()
+ax.add_patch(circ_obs.plotting_object)
+plt.plot(path[0, :], path[1, :])
+ax.set_aspect('equal')
+plt.show()
+"""
 

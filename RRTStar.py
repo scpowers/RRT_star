@@ -1,6 +1,6 @@
 from RRTBase import RRTBase
-from Node import Node
-from utilities import steer
+from Node import *
+from utilities import steer, path_cost
 import numpy as np
 from params import GOAL_BIAS, NEAR_DIST_THRESHOLD, GAMMA_STAR, MAX_STEP
 
@@ -17,20 +17,31 @@ class RRTStar(RRTBase):
             if self.is_close_to_goal(rand_node):  # if the randomly selected node is close to the goal, just use goal
                 rand_node = self.goal
 
-        nearest_node = self.T[self.get_nearest_node_idx(rand_node)]
-        new_node = steer(nearest_node, rand_node)
+        nearest_node_idx = self.get_nearest_node_idx(rand_node)
+        nearest_node = self.T[nearest_node_idx]
+        path, collision_objects = steer(nearest_node, rand_node)
+
         # skip if rand_node node is too close to nearest node or the generated path goes through an obstacle
-        if new_node is None or not self.is_path_free(new_node):
+        if path is None or not self.is_path_free(collision_objects):
             return
+
+        # finally create a new Node
+        new_node = XYThetaNode(path[0, -1], path[1, -1], path[2, -1])
+        new_node.parent = nearest_node
+        new_node.path_to_parent = (path, collision_objects)
+        new_node.cost_to_come = nearest_node.cost_to_come + path_cost(collision_objects)
+        new_node.yaw = path[2, -1]
 
         # get the set of nodes that are within a given radius distance-wise of the new node
         nearby_idxs = self.get_nearby_node_idxs(new_node)
 
         # choose the best parent node for the new node, not just choosing the nearest one like RRT
         (new_node, best_parent_index) = self.choose_best_parent(rand_node, new_node, nearby_idxs)
+        if new_node is None:
+            return
 
         # set flag saying that a solution has been found if the new node from steer is close to the goal node
-        if self.is_close_to_goal(new_node) and self.goal_solution is None:
+        if self.goal_solution is None and self.is_close_to_goal(new_node):
             self.goal_solution = new_node
             new_node.is_goal = True
         self.T.append(new_node)
@@ -49,27 +60,39 @@ class RRTStar(RRTBase):
 
     def choose_best_parent(self, rand_node, new_node, nearby_idxs):
         # choose best parent node for new_node by looking at each nearby node and their associated costs
-        best_parent_index = self.get_nearest_node_idx(rand_node)  # this was the original nearest node
-        best_new_node = new_node
+        best_parent_index = None  # this was the original nearest node
+        best_cost_to_come = np.inf
+        best_path_to_parent = None
 
         for idx in nearby_idxs:
+            # get the iterating near node
             tmp_near_node = self.T[idx]
-            tmp_new_node = steer(tmp_near_node, new_node)  # steering FROM the iterating near node TO the new node
-            if tmp_new_node is None or not self.is_path_free(tmp_new_node):
+            # attempt to steer FROM the iterating near node TO the new node
+            path, collision_objects = steer(tmp_near_node, new_node)  #
+
+            # skip if rand_node node is too close to nearest node or the generated path goes through an obstacle
+            if path is None or not self.is_path_free(collision_objects):
                 continue
-            if tmp_new_node.cost_to_come < best_new_node.cost_to_come:
+
+            # compute new cost-to-come, coming from this iterating near node to the new node
+            new_cost_to_come = tmp_near_node.cost_to_come + path_cost(collision_objects)
+
+            # if this cost is better, set the iterating node as the best parent node
+            if new_cost_to_come < best_cost_to_come:
                 best_parent_index = idx
-                best_new_node = tmp_new_node
+                best_cost_to_come = new_cost_to_come
+                best_path_to_parent = (path, collision_objects)
 
         # use the best parent in the vicinity
-        """
-        new_node.parent = best_parent
-        new_node.cost_to_come = best_total_cost
+        if best_parent_index is None:
+            return None, None
+        path = best_path_to_parent[0]
+        new_node = XYThetaNode(path[0, -1], path[1, -1], path[2, -1])
+        new_node.parent = self.T[best_parent_index]
+        new_node.cost_to_come = best_cost_to_come
         new_node.path_to_parent = best_path_to_parent
 
         return new_node, best_parent_index
-        """
-        return best_new_node, best_parent_index
 
     def rewire(self, new_node, nearby_idxs, best_parent_index):
         # rewire nodes in the vicinity
@@ -77,11 +100,18 @@ class RRTStar(RRTBase):
             if idx == best_parent_index:  # skip the best parent from above
                 continue
             tmp_near_node = self.T[idx]
-            tmp_new_node = steer(new_node, tmp_near_node)  # steering FROM new node TO the iterating near node
-            if tmp_new_node is None or not self.is_path_free(tmp_new_node):
+            # attempt to steer FROM new node TO the iterating near node
+            path, collision_objects = steer(new_node, tmp_near_node)
+
+            # skip if rand_node node is too close to nearest node or the generated path goes through an obstacle
+            if path is None or not self.is_path_free(collision_objects):
                 continue
-            if tmp_new_node.cost_to_come < tmp_near_node.cost_to_come:
+
+            # compute new cost-to-come, coming from the new node to this iterating near node
+            new_cost_to_come = new_node.cost_to_come + path_cost(collision_objects)
+
+            if new_cost_to_come < tmp_near_node.cost_to_come:
                 # actually cheaper to go to new_node first instead of the original parent of this iterating near node
-                tmp_near_node.parent = tmp_new_node.parent
-                tmp_near_node.cost_to_come = tmp_new_node.cost_to_come
-                tmp_near_node.path_to_parent = tmp_new_node.path_to_parent
+                tmp_near_node.parent = new_node
+                tmp_near_node.cost_to_come = new_cost_to_come
+                tmp_near_node.path_to_parent = (path, collision_objects)

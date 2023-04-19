@@ -1,7 +1,7 @@
 import numpy as np
 
 # global params
-N_SAMPLES = 200
+N_SAMPLES = 1000
 
 # state plotting params
 ARROW_LENGTH = 2
@@ -31,4 +31,4 @@ GOAL_DIST_THRESHOLD = MAX_STEP
 
 # RRT* params
 GAMMA_STAR = 5
-NEAR_DIST_THRESHOLD = MAX_STEP # can be at most MAX_STEP
+NEAR_DIST_THRESHOLD = MAX_STEP  # can be at most MAX_STEP
