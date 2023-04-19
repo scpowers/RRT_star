@@ -73,6 +73,7 @@ class XYThetaNode(Node):
         if theta is None:
             theta = np.random.uniform(YAW_MIN, YAW_MAX)
         super().__init__([x, y, theta])
+        self.yaw = theta
         self.is_goal = False
 
     def dist_to_node(self, node):
@@ -82,7 +83,6 @@ class XYThetaNode(Node):
         return fast_Euclidean_dist(x1, y1, x2, y2)
 
     def plot_node(self):
-        """
         if self.is_goal:
             plt.arrow(self.plotting_object[0], self.plotting_object[1],
                       ARROW_LENGTH * np.cos(self.yaw), ARROW_LENGTH * np.sin(self.yaw), width=0.1, facecolor='m')
@@ -93,5 +93,5 @@ class XYThetaNode(Node):
         if self.is_goal:
             plt.plot(self.plotting_object[0], self.plotting_object[1], color='m', marker='o')
         else:
-            #plt.plot(self.plotting_object[0], self.plotting_object[1], color='g', marker='.')
-            pass
+            plt.plot(self.plotting_object[0], self.plotting_object[1], color='g', marker='.')
+        """
