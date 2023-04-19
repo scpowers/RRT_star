@@ -1,7 +1,7 @@
 import numpy as np
 
 # global params
-N_SAMPLES = 1000
+N_SAMPLES = 2000
 
 # state plotting params
 ARROW_LENGTH = 2
