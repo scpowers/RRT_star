@@ -52,7 +52,9 @@ class CircularObstacle(Obstacle):
 
     def is_within_obs(self, node: Node) -> bool:
         """Takes a Node object and returns True if the node is within the circle"""
-        return self.Circle.center.distance(node.Point) < self.Circle.radius
+        (x, y, theta) = map(float, node.Point.coordinates)
+        tmp_point = Point(x, y)
+        return self.Circle.center.distance(tmp_point) < self.Circle.radius
 
     def line_collision_check(self, segments) -> bool:
         """Return True if any Segments in segments intersects this Obstacle"""
@@ -77,7 +79,9 @@ class PolygonObstacle(Obstacle):
 
     def is_within_obs(self, node: Node) -> bool:
         """Takes a Node object and returns True if the node is within the polygon"""
-        return self.Polygon.encloses_point(node.Point)
+        (x, y, theta) = map(float, node.Point.coordinates)
+        tmp_point = Point(x, y)
+        return self.Polygon.encloses_point(tmp_point)
 
     def line_collision_check(self, segments) -> bool:
         """Return True if any Segments in segments intersects this Obstacle"""
