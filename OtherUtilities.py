@@ -1,7 +1,7 @@
 import numpy as np
 from numba import jit
 from params import PATH_TIME_DURATION, PATH_TIME_DISCRETIZATION, PATH_INITIAL_SPEED, PATH_FINAL_SPEED, \
-    DIST_BETWEEN_AXLES, MIN_STEER_ANGLE, MAX_STEER_ANGLE
+    DIST_BETWEEN_AXLES, MIN_STEER_ANGLE, MAX_STEER_ANGLE, HEADING_DIFF_THRESHOLD
 from sympy import Segment
 
 
@@ -79,6 +79,13 @@ def generate_trajectory_function(state0, statef):
         else:
             controls[:, t] = new_controls.flatten()
 
+    # check if final heading was approximately reached:
+    if np.abs(path[-1, -1] - statef[-1, 0]) > HEADING_DIFF_THRESHOLD:
+        valid_path = False
+
     # generate list of Line objects for this path
-    collision_objects = [Segment(tuple(path[0:-1, t]), tuple(path[0:-1, t+1])) for t in range(n_steps - 1)]
+    if not valid_path:
+        collision_objects = None
+    else:
+        collision_objects = [Segment(tuple(path[0:-1, t]), tuple(path[0:-1, t+1])) for t in range(n_steps - 1)]
     return path, collision_objects, controls, valid_path
