@@ -85,10 +85,10 @@ class XYThetaNode(Node):
     def plot_node(self):
         if self.is_goal:
             plt.arrow(self.plotting_object[0], self.plotting_object[1],
-                      ARROW_LENGTH * np.cos(self.yaw), ARROW_LENGTH * np.sin(self.yaw), width=0.1, facecolor='m')
+                      ARROW_LENGTH * np.cos(self.yaw), ARROW_LENGTH * np.sin(self.yaw), width=ARROW_WIDTH, facecolor='m')
         else:
             plt.arrow(self.plotting_object[0], self.plotting_object[1],
-                      ARROW_LENGTH * np.cos(self.yaw), ARROW_LENGTH * np.sin(self.yaw), width=0.1, facecolor='g')
+                      ARROW_LENGTH * np.cos(self.yaw), ARROW_LENGTH * np.sin(self.yaw), width=ARROW_WIDTH, facecolor='g')
         """
         if self.is_goal:
             plt.plot(self.plotting_object[0], self.plotting_object[1], color='m', marker='o')
