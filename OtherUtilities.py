@@ -1,7 +1,8 @@
 import numpy as np
 from numba import jit
 from params import PATH_TIME_DURATION, PATH_TIME_DISCRETIZATION, PATH_INITIAL_SPEED, PATH_FINAL_SPEED
-from sympy import symbols, Curve
+from sympy import Segment
+
 
 @jit(nopython=True)
 def fast_Euclidean_dist(x1, y1, x2, y2):
@@ -52,9 +53,6 @@ def generate_trajectory_function(state0, statef):
         dy = A @ dlambdafunc(t1_vec[t])
         path[:, t] = psi(y, dy).flatten()
 
-    # generate Curve object for this path
-    t = symbols('t')
-    collision_object = Curve((A[0, -1] + t*A[0, -2] + t**2*A[0, -3] + t**3*A[0, -4],
-                              A[1, -1] + t*A[1, -2] + t**2*A[1, -3] + t**3*A[1, -4]), (t, 0, T))
-
-    return path, collision_object
+    # generate list of Line objects for this path
+    collision_objects = [Segment(tuple(path[0:-1, t]), tuple(path[0:-1, t+1])) for t in range(n_steps - 1)]
+    return path, collision_objects
