@@ -52,26 +52,9 @@ rrt.build_tree()
 rrt.visualize_tree()
 """
 
-state0 = np.array([0.0, 5.0, 0.0]).reshape(-1, 1)
-statef = np.array([5.0, 2.5, -3*np.pi/4]).reshape(-1, 1)
-T = 10.0
-
-y0 = car_h(state0)
-yf = car_h(statef)
-dy0 = np.array([np.cos(state0[2]), np.sin(state0[2])]).reshape(-1, 1)
-dyf = np.array([np.cos(statef[2]), np.sin(statef[2])]).reshape(-1, 1)
-
-A = poly3_coeff(y0, dy0, yf, dyf, 0.0, T)
-
-n_steps = 100
-t1_vec = np.linspace(0, T, n_steps)
-state_matrix = np.zeros((3, n_steps))
-
-for t in range(n_steps):
-    y = A @ lambdafunc(t1_vec[t])
-    dy = A @ dlambdafunc(t1_vec[t])
-    state_matrix[:, t] = psi(y, dy).flatten()
-
-plt.plot(state_matrix[0, :], state_matrix[1, :])
+state0 = np.array([0.0, 5.0, 0]).reshape(-1, 1)
+statef = np.array([5.0, 2.5, 0]).reshape(-1, 1)
+path = generate_trajectory(state0, statef)
+plt.plot(path[0, :], path[1, :])
 plt.show()
 
