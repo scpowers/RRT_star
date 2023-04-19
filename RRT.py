@@ -2,6 +2,8 @@ from RRTBase import RRTBase
 from utilities import steer
 import numpy as np
 from params import GOAL_BIAS
+from Node import XYThetaNode
+from utilities import path_cost
 
 
 class RRT(RRTBase):
@@ -17,12 +19,21 @@ class RRT(RRTBase):
                 rand_node = self.goal
 
         nearest_node = self.T[self.get_nearest_node_idx(rand_node)]
-        new_node = steer(nearest_node, rand_node)
+        path, collision_objects = steer(nearest_node, rand_node)
+
         # skip if rand_node node is too close to nearest node or the generated path goes through an obstacle
-        if new_node is None or not self.is_path_free(new_node):
+        if path is None or not self.is_path_free(collision_objects):
             return
+
+        # finally create a new Node
+        new_node = XYThetaNode(path[0, -1], path[1, -1], path[2, -1])
+        new_node.parent = nearest_node
+        new_node.path_to_parent = (path, collision_objects)
+        new_node.cost_to_come = nearest_node.cost_to_come + path_cost(collision_objects)
+        new_node.yaw = path[2, -1]
+
         # set flag saying that a solution has been found if the new node from steer is close to the goal node
-        if self.is_close_to_goal(new_node) and self.goal_solution is None:
+        if self.goal_solution is None and self.is_close_to_goal(new_node):
             self.goal_solution = new_node
             new_node.is_goal = True
         self.T.append(new_node)
