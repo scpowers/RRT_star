@@ -72,14 +72,13 @@ class XYThetaNode(Node):
             y = np.random.uniform(MAP_Y_MIN, MAP_Y_MAX)
         if theta is None:
             theta = np.random.uniform(YAW_MIN, YAW_MAX)
-        super().__init__([x, y])
-        self.yaw = theta
+        super().__init__([x, y, theta])
         self.is_goal = False
 
     def dist_to_node(self, node):
         """Get distance metric to a given node. The Euclidean distance was chosen for this node type."""
-        (x1, y1) = map(float, self.Point.coordinates)
-        (x2, y2) = map(float, node.Point.coordinates)
+        (x1, y1, t1) = map(float, self.Point.coordinates)
+        (x2, y2, t1) = map(float, node.Point.coordinates)
         return fast_Euclidean_dist(x1, y1, x2, y2)
 
     def plot_node(self):
