@@ -2,7 +2,7 @@ from Node import *
 from Obstacle import *
 from abc import ABC, abstractmethod
 import numpy as np
-from params import N_NODES
+from params import N_SAMPLES
 from tqdm import tqdm
 
 
@@ -45,7 +45,7 @@ class RRTBase(ABC):
         return self.goal.dist_to_node(node) < GOAL_DIST_THRESHOLD
 
     def build_tree(self):
-        for i in tqdm(range(N_NODES)):
+        for i in tqdm(range(N_SAMPLES)):
             self.add_node()
         if self.goal_solution is None:
             print('No path to goal found.')

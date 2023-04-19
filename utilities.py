@@ -27,7 +27,11 @@ def steer(near_node: XYThetaNode, rand_node: XYThetaNode):
     # generate trajectory to new coordinates from near node and associated Curve object for collision checking
     #print(f'near node yaw: {near_node_coords[2, 0]}')
     #print(f'new node yaw: {new_coords[2, 0]}\n')
-    path, collision_objects = generate_trajectory_function(near_node_coords, new_coords)
+    path, collision_objects, controls, valid_path = generate_trajectory_function(near_node_coords, new_coords)
+
+    # this is hit if the generated controls are beyond the steering control limits
+    if not valid_path:
+        return None, None
 
     return path, collision_objects
 
