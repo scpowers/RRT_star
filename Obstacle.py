@@ -18,8 +18,8 @@ class Obstacle(ABC):
         return True
 
     @abstractmethod
-    def line_collision_check(self, node: Node) -> bool:
-        """Return True if node's path to parent intersects this Obstacle"""
+    def line_collision_check(self, segments) -> bool:
+        """Return True if any Segments in segments intersects this Obstacle"""
         return True
 
 
@@ -54,18 +54,19 @@ class CircularObstacle(Obstacle):
         """Takes a Node object and returns True if the node is within the circle"""
         return self.Circle.center.distance(node.Point) < self.Circle.radius
 
-    def line_collision_check(self, node: Node) -> bool:
-        """Return True if node's path to parent intersects this Obstacle"""
-        if node.parent is None:  # root node case, there is no path to parent
-            return False
-        intersection_pts = node.path_to_parent[1].intersection(self.Circle)
-        return len(intersection_pts) > 0
+    def line_collision_check(self, segments) -> bool:
+        """Return True if any Segments in segments intersects this Obstacle"""
+        for segment in segments:
+            intersection_pts = segment.intersection(self.Circle)
+            if len(intersection_pts) > 0:
+                return True
+        return False
 
 
 class PolygonObstacle(Obstacle):
     def __init__(self, *points):
         """
-        Constructor for axis-aligned rectangular obstacle.
+        Constructor for Polygon obstacle.
 
         Args:
             *points: **sequence of tuples**
@@ -78,9 +79,10 @@ class PolygonObstacle(Obstacle):
         """Takes a Node object and returns True if the node is within the polygon"""
         return self.Polygon.encloses_point(node.Point)
 
-    def line_collision_check(self, node: Node) -> bool:
-        """Return True if node's path to parent intersects this Obstacle"""
-        if node.parent is None:  # root node case, there is no path to parent
-            return False
-        intersection_pts = node.path_to_parent[1].intersection(self.Polygon)
-        return len(intersection_pts) > 0
+    def line_collision_check(self, segments) -> bool:
+        """Return True if any Segments in segments intersects this Obstacle"""
+        for segment in segments:
+            intersection_pts = segment.intersection(self.Polygon)
+            if len(intersection_pts) > 0:
+                return True
+        return False
