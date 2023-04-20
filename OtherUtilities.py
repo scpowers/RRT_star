@@ -1,7 +1,7 @@
 import numpy as np
 from numba import jit
 from params import PATH_TIME_DURATION, PATH_TIME_DISCRETIZATION, PATH_INITIAL_SPEED, PATH_FINAL_SPEED, \
-    DIST_BETWEEN_AXLES, MIN_STEER_ANGLE, MAX_STEER_ANGLE, HEADING_DIFF_THRESHOLD
+    DIST_BETWEEN_AXLES, MIN_STEER_ANGLE, MAX_STEER_ANGLE, HEADING_DIFF_THRESHOLD, GOAL_HEADING_DIFF_THRESHOLD
 from sympy import Segment
 
 
@@ -52,7 +52,7 @@ def poly3_coeff(y0, dy0, yf, dyf, t1, t2):
     return Y @ np.linalg.inv(L)
 
 
-def generate_trajectory_function(state0, statef):
+def generate_trajectory(state0, statef):
     T = PATH_TIME_DURATION
     y0 = car_h(state0)
     yf = car_h(statef)
@@ -89,3 +89,63 @@ def generate_trajectory_function(state0, statef):
     else:
         collision_objects = [Segment(tuple(path[0:-1, t]), tuple(path[0:-1, t+1])) for t in range(n_steps - 1)]
     return path, collision_objects, controls, valid_path
+
+
+def generate_straight_path(state0, statef, statef_is_goal):
+    # first, compute heading that will be assigned to statef because of this line
+    # (heading for a given state = heading along path going to that state from parent)
+    new_heading = np.arctan2(statef[1, 0] - state0[1, 0], statef[0, 0] - state0[0, 0])
+
+    # check if this new heading is too different from the heading going to state0 from its parent
+    theta0 = state0[2, 0]
+    thetaf = new_heading
+    valid_path = angle_check(theta0, thetaf)
+    if not valid_path:
+        return None, None, None, valid_path
+
+    # now, handle the case where the statef actually corresponds to the goal node (can't overwrite its heading value)
+    if not statef_is_goal:
+        # populate statef's heading slot
+        statef[2, 0] = new_heading
+    else:
+        # see if the heading going to the goal is sufficiently close to the requested goal heading
+        # note: statef[2, 0] should be the actual goal heading, new_heading is the heading coming from potential parent
+        goal_heading_check = angle_check(statef[2, 0], new_heading, goal_check=True)
+        if not goal_heading_check:
+            return None, None, None, goal_heading_check
+
+    # if you made it here, the path should be valid by all standards
+    path = np.hstack((state0, statef))
+    controls = None
+    collision_objects = [Segment(tuple(path[0:-1, 0]), tuple(path[0:-1, 1]))]
+    return path, collision_objects, controls, valid_path
+
+
+@jit(nopython=True)
+def angle_check(theta0, thetaf, goal_check=False):
+    if goal_check:
+        THRESHOLD = GOAL_HEADING_DIFF_THRESHOLD
+    else:
+        THRESHOLD = HEADING_DIFF_THRESHOLD
+    theta0_abs = np.abs(theta0)
+    thetaf_abs = np.abs(thetaf)
+
+    valid_path = True
+    # case 1: theta1 and theta2 are in diagonal quadrants from each other, not even close
+    if np.abs(theta0_abs - thetaf_abs) > THRESHOLD:
+        valid_path = False
+    else:
+        # case 2: abs delta is close, but the true delta can be larger
+        if np.sign(theta0) != np.sign(thetaf):
+            # if they're in the first and fourth quadrants
+            if theta0_abs < np.pi/2:
+                diff = theta0_abs + thetaf_abs
+            # they're in the second and third quadrants
+            else:
+                diff = (np.pi - theta0_abs) + (np.pi - thetaf_abs)
+
+            # now compare diff to threshold
+            if diff > THRESHOLD:
+                valid_path = False
+
+    return valid_path
