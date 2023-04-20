@@ -36,6 +36,7 @@ class RRT(RRTBase):
         if self.goal_solution is None and self.is_close_to_goal(new_node):
             self.goal_solution = new_node
             new_node.is_goal = True
+            new_node.yaw = self.goal.yaw
         self.T.append(new_node)
 
 
