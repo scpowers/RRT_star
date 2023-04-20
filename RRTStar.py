@@ -31,6 +31,8 @@ class RRTStar(RRTBase):
         new_node.path_to_parent = (path, collision_objects)
         new_node.cost_to_come = nearest_node.cost_to_come + path_cost(collision_objects)
         new_node.yaw = path[2, -1]
+        if self.is_close_to_goal(new_node):
+            new_node.is_goal = True
 
         # get the set of nodes that are within a given radius distance-wise of the new node
         nearby_idxs = self.get_nearby_node_idxs(new_node)
