@@ -33,6 +33,8 @@ class RRTStar(RRTBase):
         new_node.yaw = path[2, -1]
         if self.is_close_to_goal(new_node):
             new_node.is_goal = True
+            new_node.path_to_parent[0][2, -1] = self.goal.yaw
+            new_node.yaw = self.goal.yaw
 
         # get the set of nodes that are within a given radius distance-wise of the new node
         nearby_idxs = self.get_nearby_node_idxs(new_node)
@@ -44,8 +46,11 @@ class RRTStar(RRTBase):
 
         # set flag saying that a solution has been found if the new node from steer is close to the goal node
         if self.goal_solution is None and self.is_close_to_goal(new_node):
-            self.goal_solution = new_node
             new_node.is_goal = True
+            new_node.path_to_parent[0][2, -1] = self.goal.yaw
+            new_node.yaw = self.goal.yaw
+            self.goal_solution = new_node
+
         self.T.append(new_node)
 
         # rewire
