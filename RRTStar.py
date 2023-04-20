@@ -27,14 +27,13 @@ class RRTStar(RRTBase):
 
         # finally create a new Node
         new_node = XYThetaNode(path[0, -1], path[1, -1], path[2, -1])
+        if self.is_close_to_goal(new_node):
+            new_node = XYThetaNode(path[0, -1], path[1, -1], self.goal.yaw)
+            new_node.is_goal = True
         new_node.parent = nearest_node
         new_node.path_to_parent = (path, collision_objects)
         new_node.cost_to_come = nearest_node.cost_to_come + path_cost(collision_objects)
         new_node.yaw = path[2, -1]
-        if self.is_close_to_goal(new_node):
-            new_node.is_goal = True
-            new_node.path_to_parent[0][2, -1] = self.goal.yaw
-            new_node.yaw = self.goal.yaw
 
         # get the set of nodes that are within a given radius distance-wise of the new node
         nearby_idxs = self.get_nearby_node_idxs(new_node)
