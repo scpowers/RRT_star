@@ -1,7 +1,8 @@
 import numpy as np
 from numba import jit
 from params import PATH_TIME_DURATION, PATH_TIME_DISCRETIZATION, PATH_INITIAL_SPEED, PATH_FINAL_SPEED, \
-    DIST_BETWEEN_AXLES, MIN_STEER_ANGLE, MAX_STEER_ANGLE, HEADING_DIFF_THRESHOLD, GOAL_HEADING_DIFF_THRESHOLD
+    DIST_BETWEEN_AXLES, MIN_STEER_ANGLE, MAX_STEER_ANGLE, HEADING_DIFF_THRESHOLD, GOAL_HEADING_DIFF_THRESHOLD, \
+    MAP_X_MIN, MAP_X_MAX, MAP_Y_MIN, MAP_Y_MAX, GOAL_DIST_THRESHOLD
 from sympy import Segment
 
 
@@ -101,7 +102,20 @@ def generate_straight_path(state0, statef, statef_is_goal):
     thetaf = new_heading
     valid_path = angle_check(theta0, thetaf)
     if not valid_path:
-        return None, None, None, valid_path
+        new_heading = theta0 + determine_delta_direction(theta0, thetaf) * HEADING_DIFF_THRESHOLD
+        # need new statef corresponding to this heading from state0
+        x0 = state0[0, 0]
+        y0 = state0[1, 0]
+        dist = fast_Euclidean_dist(x0, y0, statef[0, 0], statef[1, 0])
+        new_x = x0 + dist*np.cos(new_heading)
+        new_y = y0 + dist*np.sin(new_heading)
+        if not bounds_check(new_x, new_y):
+            return None, None, None, bounds_check
+        statef[0, 0] = new_x
+        statef[1, 0] = new_y
+        valid_path = True
+        if dist < GOAL_DIST_THRESHOLD:
+            statef_is_goal = True
 
     # now, handle the case where the statef actually corresponds to the goal node (can't overwrite its heading value)
     if not statef_is_goal:
@@ -149,3 +163,39 @@ def angle_check(theta0, thetaf, goal_check=False):
                 valid_path = False
 
     return valid_path
+
+
+@jit(nopython=True)
+# return sign of angle to add to theta0 to go towards thetaf (in the closest way)
+# +1: add positive angle to theta0, -1: add negative angle to theta0
+def determine_delta_direction(theta0, thetaf):
+    if np.sign(theta0) == np.sign(thetaf):
+        return np.sign(thetaf-theta0)
+    else:
+        if theta0 >= 0:
+            if theta0 < np.pi/2:
+                if np.pi - np.abs(thetaf) < theta0:
+                    return 1
+                else:
+                    return -1
+            else:
+                if np.abs(thetaf) < np.pi - theta0:
+                    return -1
+                else:
+                    return 1
+        else:
+            if theta0 > -np.pi/2:
+                if np.pi - thetaf < np.abs(theta0):
+                    return -1
+                else:
+                    return 1
+            else:
+                if thetaf < np.pi - np.abs(theta0):
+                    return 1
+                else:
+                    return -1
+
+
+@jit(nopython=True)
+def bounds_check(x, y):
+    return MAP_X_MIN <= x <= MAP_X_MAX and MAP_Y_MIN <= y <= MAP_Y_MAX
