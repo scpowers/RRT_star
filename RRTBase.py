@@ -47,6 +47,8 @@ class RRTBase(ABC):
     def build_tree(self):
         for i in tqdm(range(N_SAMPLES)):
             self.add_node()
+            if self.goal_solution is not None:
+                break
         if self.goal_solution is None:
             print('No path to goal found.')
         else:
