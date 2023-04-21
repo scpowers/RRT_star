@@ -42,6 +42,7 @@ class RRTStar(RRTBase):
         # set flag saying that a solution has been found if the new node from steer is close to the goal node
         if self.is_close_to_goal(new_node):
             if self.goal_solution is None and angle_check(self.goal.yaw, new_node.yaw):
+                print('found a path to the goal')
                 new_node.is_goal = True
                 new_node.yaw = self.goal.yaw
                 self.goal_solution = new_node
@@ -105,7 +106,7 @@ class RRTStar(RRTBase):
                 continue
             tmp_near_node = self.T[idx]
             # attempt to steer FROM new node TO the iterating near node
-            path, collision_objects = steer(new_node, tmp_near_node)
+            path, collision_objects = steer(new_node, tmp_near_node, allow_new_thetaf=False)
 
             # skip if rand_node node is too close to nearest node or the generated path goes through an obstacle
             if path is None or not self.is_path_free(collision_objects):
@@ -116,6 +117,7 @@ class RRTStar(RRTBase):
 
             if new_cost_to_come < tmp_near_node.cost_to_come:
                 # actually cheaper to go to new_node first instead of the original parent of this iterating near node
+                print('rewired a node')
                 tmp_near_node.parent = new_node
                 tmp_near_node.cost_to_come = new_cost_to_come
                 tmp_near_node.path_to_parent = (path, collision_objects)
