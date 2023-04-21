@@ -1,7 +1,7 @@
 import numpy as np
 
 # global params
-N_SAMPLES = 2000
+N_SAMPLES = 500
 
 # state plotting params
 ARROW_LENGTH = 2
@@ -18,7 +18,7 @@ GOAL_BIAS = 0.05
 
 # steer function parameters
 MIN_STEP = 3.0
-MAX_STEP = 8.0
+MAX_STEP = 15.0
 PATH_TIME_DURATION = 10
 PATH_TIME_DISCRETIZATION = 10
 PATH_INITIAL_SPEED = 1
@@ -26,8 +26,8 @@ PATH_FINAL_SPEED = 1
 DIST_BETWEEN_AXLES = 2
 MIN_STEER_ANGLE = -np.pi/4
 MAX_STEER_ANGLE = np.pi/4
-HEADING_DIFF_THRESHOLD = 35 * np.pi / 180
-GOAL_HEADING_DIFF_THRESHOLD = 10 * np.pi / 180
+HEADING_DIFF_THRESHOLD = 30 * np.pi / 180
+GOAL_HEADING_DIFF_THRESHOLD = 5 * np.pi / 180
 
 # goal node checking params
 GOAL_DIST_THRESHOLD = 10.0

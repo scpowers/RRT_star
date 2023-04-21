@@ -10,7 +10,7 @@ from OtherUtilities import *
 from utilities import path_cost
 from Node import XYThetaNode
 
-circ_obs = CircularObstacle(40, 40, 10)
+circ_obs = CircularObstacle(40, 20, 10)
 rect_obs = PolygonObstacle((30, 0), (40, 0), (40, 10), (30, 10))
 circ2_obs = CircularObstacle(90, 90, 5)
 
@@ -46,8 +46,9 @@ q_goal = [1, 8, 0]
 """
 
 q_start = [0, 0, 0]
-q_goal = [70, 70, 0]
-obs = [circ_obs, rect_obs, circ2_obs]
+q_goal = [80, 30, 0]
+#obs = [circ_obs, rect_obs, circ2_obs]
+obs = [circ_obs]
 #obs = []
 rrt = RRT(q_start, q_goal, obs)
 rrt.build_tree()
