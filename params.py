@@ -17,7 +17,7 @@ YAW_MAX = np.pi
 GOAL_BIAS = 0.05
 
 # steer function parameters
-MIN_STEP = 0.0
+MIN_STEP = 3.0
 MAX_STEP = 10.0
 PATH_TIME_DURATION = 10
 PATH_TIME_DISCRETIZATION = 10
