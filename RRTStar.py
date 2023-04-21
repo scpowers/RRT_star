@@ -3,6 +3,7 @@ from Node import *
 from utilities import steer, path_cost
 import numpy as np
 from params import GOAL_BIAS, NEAR_DIST_THRESHOLD, GAMMA_STAR, MAX_STEP
+from OtherUtilities import angle_check
 
 
 class RRTStar(RRTBase):
@@ -14,8 +15,6 @@ class RRTStar(RRTBase):
             rand_node = self.goal
         else:
             rand_node = self.sample_free()
-            if self.is_close_to_goal(rand_node):  # if the randomly selected node is close to the goal, just use goal
-                rand_node = self.goal
 
         nearest_node_idx = self.get_nearest_node_idx(rand_node)
         nearest_node = self.T[nearest_node_idx]
@@ -27,13 +26,9 @@ class RRTStar(RRTBase):
 
         # finally create a new Node
         new_node = XYThetaNode(path[0, -1], path[1, -1], path[2, -1])
-        if self.is_close_to_goal(new_node):
-            new_node = XYThetaNode(path[0, -1], path[1, -1], self.goal.yaw)
-            new_node.is_goal = True
         new_node.parent = nearest_node
         new_node.path_to_parent = (path, collision_objects)
         new_node.cost_to_come = nearest_node.cost_to_come + path_cost(collision_objects)
-        new_node.yaw = path[2, -1]
 
         # get the set of nodes that are within a given radius distance-wise of the new node
         nearby_idxs = self.get_nearby_node_idxs(new_node)
@@ -44,11 +39,13 @@ class RRTStar(RRTBase):
             return
 
         # set flag saying that a solution has been found if the new node from steer is close to the goal node
-        if self.goal_solution is None and self.is_close_to_goal(new_node):
-            new_node.is_goal = True
-            new_node.path_to_parent[0][2, -1] = self.goal.yaw
-            new_node.yaw = self.goal.yaw
-            self.goal_solution = new_node
+        if self.is_close_to_goal(new_node):
+            if self.goal_solution is None and angle_check(self.goal.yaw, new_node.yaw):
+                new_node.is_goal = True
+                new_node.yaw = self.goal.yaw
+                self.goal_solution = new_node
+            else:
+                return
 
         self.T.append(new_node)
 
