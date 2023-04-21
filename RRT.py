@@ -16,8 +16,8 @@ class RRT(RRTBase):
             rand_node = self.goal
         else:
             rand_node = self.sample_free()
-            if self.is_close_to_goal(rand_node):  # if the randomly selected node is close to the goal, just use goal
-                rand_node = self.goal
+            #if self.is_close_to_goal(rand_node):  # if the randomly selected node is close to the goal, just use goal
+            #    rand_node = self.goal
 
         nearest_node = self.T[self.get_nearest_node_idx(rand_node)]
         path, collision_objects = steer(nearest_node, rand_node)
