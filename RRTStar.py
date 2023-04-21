@@ -2,8 +2,9 @@ from RRTBase import RRTBase
 from Node import *
 from utilities import steer, path_cost
 import numpy as np
-from params import GOAL_BIAS, NEAR_DIST_THRESHOLD, GAMMA_STAR, MAX_STEP
+from params import GOAL_BIAS, NEAR_DIST_THRESHOLD, GAMMA_STAR, MAX_STEP, N_SAMPLES
 from OtherUtilities import angle_check
+from tqdm import tqdm
 
 
 class RRTStar(RRTBase):
@@ -118,3 +119,11 @@ class RRTStar(RRTBase):
                 tmp_near_node.parent = new_node
                 tmp_near_node.cost_to_come = new_cost_to_come
                 tmp_near_node.path_to_parent = (path, collision_objects)
+
+    def build_tree(self):
+        for i in tqdm(range(N_SAMPLES)):
+            self.add_node()
+        if self.goal_solution is None:
+            print('No path to goal found.')
+        else:
+            print('Found a path to the goal!')

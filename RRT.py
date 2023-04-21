@@ -1,10 +1,11 @@
 from RRTBase import RRTBase
 from utilities import steer
 import numpy as np
-from params import GOAL_BIAS
+from params import GOAL_BIAS, N_SAMPLES
 from Node import XYThetaNode
 from utilities import path_cost
 from OtherUtilities import angle_check
+from tqdm import tqdm
 
 
 class RRT(RRTBase):
@@ -43,7 +44,15 @@ class RRT(RRTBase):
         # finally, add node to the tree
         self.T.append(new_node)
 
-
+    def build_tree(self):
+        for i in tqdm(range(N_SAMPLES)):
+            self.add_node()
+            if self.goal_solution is not None:
+                break
+        if self.goal_solution is None:
+            print('No path to goal found.')
+        else:
+            print('Found a path to the goal!')
 
 
 
