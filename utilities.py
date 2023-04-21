@@ -5,7 +5,7 @@ from Node import XYThetaNode
 from OtherUtilities import generate_trajectory, generate_straight_path
 
 
-def steer(near_node: XYThetaNode, rand_node: XYThetaNode):
+def steer(near_node: XYThetaNode, rand_node: XYThetaNode, allow_new_thetaf=True):
     # if the nodes are too close together in the x-y plane, return early
     dist = near_node.dist_to_node(rand_node)
     if dist < MIN_STEP:
@@ -30,7 +30,7 @@ def steer(near_node: XYThetaNode, rand_node: XYThetaNode):
     #path, collision_objects, controls, valid_path = generate_trajectory(near_node_coords, new_coords)
     new_coords_are_goal = rand_node.is_goal and close_enough_to_goal
     path, collision_objects, controls, valid_path = generate_straight_path(near_node_coords, new_coords,
-                                                                           new_coords_are_goal)
+                                                                           new_coords_are_goal, allow_new_thetaf)
 
     # this is hit if the generated controls are beyond the steering control limits
     if not valid_path:
