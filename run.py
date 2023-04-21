@@ -46,7 +46,7 @@ q_goal = [1, 8, 0]
 """
 
 q_start = [0, 0, 0]
-q_goal = [80, 30, 0]
+q_goal = [60, 40, 0]
 #obs = [circ_obs, rect_obs, circ2_obs]
 obs = [circ_obs]
 #obs = []
