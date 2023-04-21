@@ -35,9 +35,9 @@ class RRT(RRTBase):
         if self.is_close_to_goal(new_node):
             # if no goal solution exists yet and the previous heading is sufficiently close to the goal heading, great
             if self.goal_solution is None and angle_check(self.goal.yaw, new_node.yaw):
-                self.goal_solution = new_node
                 new_node.is_goal = True
                 new_node.yaw = self.goal.yaw
+                self.goal_solution = new_node
             else:  # if it's close to the goal but not a viable solution, don't add it to reduce clutter around it
                 return
         # finally, add node to the tree
