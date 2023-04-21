@@ -48,11 +48,10 @@ class RRT(RRTBase):
         for i in tqdm(range(N_SAMPLES)):
             self.add_node()
             if self.goal_solution is not None:
+                print('found a path to the goal')
                 break
         if self.goal_solution is None:
             print('No path to goal found.')
-        else:
-            print('Found a path to the goal!')
 
 
 
