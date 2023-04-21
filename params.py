@@ -30,7 +30,7 @@ HEADING_DIFF_THRESHOLD = 30 * np.pi / 180
 GOAL_HEADING_DIFF_THRESHOLD = 5 * np.pi / 180
 
 # goal node checking params
-GOAL_DIST_THRESHOLD = 10.0
+GOAL_DIST_THRESHOLD = 7.0  # bounded between MIN_STEP and MAX_STEP
 
 # RRT* params
 GAMMA_STAR = 5
