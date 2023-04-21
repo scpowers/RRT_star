@@ -28,18 +28,21 @@ class RRT(RRTBase):
 
         # finally create a new Node
         new_node = XYThetaNode(path[0, -1], path[1, -1], path[2, -1])
-        if new_node.dist_to_node(self.T[self.get_nearest_node_idx(new_node)]) < MIN_STEP:
-            return
+        #if new_node.dist_to_node(self.T[self.get_nearest_node_idx(new_node)]) < MIN_STEP:
+        #    return
         new_node.parent = nearest_node
         new_node.path_to_parent = (path, collision_objects)
         new_node.cost_to_come = nearest_node.cost_to_come + path_cost(collision_objects)
         new_node.yaw = path[2, -1]
 
         # set flag saying that a solution has been found if the new node from steer is close to the goal node
-        if self.goal_solution is None and self.is_close_to_goal(new_node) and angle_check(self.goal.yaw, new_node.yaw):
-            self.goal_solution = new_node
-            new_node.is_goal = True
-            new_node.yaw = self.goal.yaw
+        if self.is_close_to_goal(new_node):
+            if self.goal_solution is None and angle_check(self.goal.yaw, new_node.yaw):
+                self.goal_solution = new_node
+                new_node.is_goal = True
+                new_node.yaw = self.goal.yaw
+            else:  # if it's close to the goal but not a viable solution, don't add it to reduce clutter around it
+                return
         self.T.append(new_node)
 
 
