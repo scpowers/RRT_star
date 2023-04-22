@@ -8,8 +8,38 @@ from tqdm import tqdm
 
 
 class RRTStar(RRTBase):
+    """
+    Class for rapidly-exploring random trees of the RRT* variety.
+
+    **Attribute**
+        T: **list, Node**
+            List of Node objects representing the tree
+        root: **Node**
+            Node object representing the root configuration
+        goal: **Node**
+            Node object representing the goal configuration
+        obs: **list, Obstacle**
+            List of Obstacle objects in the environment
+        goal_solution: **Node**
+            Node object representing the actual discovered goal node with a parent node and cost-to-come
+
+    **Methods**
+        * add_node: add a node to the tree.
+        * sample_free: return a random Node outside of any obstacles
+        * is_node_free: return True if the node is not witin any obstacles
+        * is_path_free: return True if the node's path to parent does not intersect any obstacles
+        * get_nearest_node_idx: get index of the node closest to the given node within the tree
+        * is_close_to_goal: return True if a given node is close enough to the goal to call them equivalent
+        * build_tree: build the tree
+        * visualize_tree: plot the tree's nodes and edges in the environment with obstacles
+        * get_nearby_node_idxs: get indices of nodes in the tree within a certain distance of the given node
+        * choose_best_parent: finds the best parent node for a given node by checking every neighbor in a given range
+        * rewire: see if nodes in a range around the given node can be re-routed cheaper through the given node
+
+    """
 
     def add_node(self):
+        """Add a node to the tree"""
         # goal biasing process
         rand = np.random.uniform()
         if rand < GOAL_BIAS:
@@ -55,6 +85,7 @@ class RRTStar(RRTBase):
         self.rewire(new_node, nearby_idxs, best_parent_index)
 
     def get_nearby_node_idxs(self, node: Node):
+        """Get indices of nodes in the tree within a certain distance of the given node"""
         node_idxs = []
         for i, existing_node in enumerate(self.T):
             #dist_threshold = min(GAMMA_STAR * np.sqrt(np.log(len(self.T)) / len(self.T)), MAX_STEP)
@@ -64,6 +95,7 @@ class RRTStar(RRTBase):
         return node_idxs
 
     def choose_best_parent(self, rand_node, new_node, nearby_idxs):
+        """Find the best parent node for a given node by checking every neighbor in a given range"""
         # choose best parent node for new_node by looking at each nearby node and their associated costs
         best_parent_index = None  # this was the original nearest node
         best_cost_to_come = np.inf
@@ -100,6 +132,7 @@ class RRTStar(RRTBase):
         return new_node, best_parent_index
 
     def rewire(self, new_node, nearby_idxs, best_parent_index):
+        """See if nodes in a range around the given node can be re-routed cheaper through the given node"""
         # rewire nodes in the vicinity
         for idx in nearby_idxs:
             if idx == best_parent_index:  # skip the best parent from above
@@ -123,6 +156,7 @@ class RRTStar(RRTBase):
                 tmp_near_node.path_to_parent = (path, collision_objects)
 
     def build_tree(self):
+        """Build the tree"""
         for i in tqdm(range(N_SAMPLES)):
             self.add_node()
         if self.goal_solution is None:
