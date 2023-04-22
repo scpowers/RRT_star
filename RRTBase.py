@@ -32,6 +32,16 @@ class RRTBase(ABC):
 
     """
     def __init__(self, q_start, q_goal, obs):
+        """
+        Constructor for RRT base class.
+
+        :param q_start: **list, float**
+            state vector of the starting configuration
+        :param q_goal: **list, float**
+            state vector of the goal configuration
+        :param obs: **list, Obstacle**
+            list of Obstacle objects
+        """
         root = XYThetaNode(q_start[0], q_start[1], q_start[2])
         root.cost_to_come = 0.0
         self.T = [root]
