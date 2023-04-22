@@ -29,9 +29,10 @@ class Node:
         """
         Constructor for general node.
 
-        **Args**
-            states: **list, float**
-                state vector corresponding to this node
+        **Arguments**
+
+        states: **list, float**
+            state vector corresponding to this node
         """
         assert len(states) >= 2, "Must have at least two state variables"
         self.Point = Point(states)
@@ -79,13 +80,14 @@ class XYThetaNode(Node):
         """
         Constructor for x-y-theta node.
 
-        Args:
-            x: **double or int, optional**
-                x-coordinate of vehicle
-            y: **double or int, optional**
-                y-coordinate of vehicle
-            theta: **double or int, optional**
-                Heading of vehicle on x-y plane (in radians)
+        **Arguments**
+
+        x: **double or int, optional**
+            x-coordinate of vehicle
+        y: **double or int, optional**
+            y-coordinate of vehicle
+        theta: **double or int, optional**
+            Heading of vehicle on x-y plane (in radians)
         """
         if x is None:
             x = np.random.uniform(MAP_X_MIN, MAP_X_MAX)
