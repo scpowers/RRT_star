@@ -1,6 +1,6 @@
 import numpy as np
 from Node import XYThetaNode
-from utilities import fast_Euclidean_dist
+from utilities import fast_euclidean_dist
 from numba import jit
 from params import *
 from sympy import Segment
@@ -159,7 +159,7 @@ def generate_straight_path(state0, statef, statef_is_goal, allow_new_thetaf=True
             # need new statef corresponding to this heading from state0
             x0 = state0[0, 0]
             y0 = state0[1, 0]
-            dist = fast_Euclidean_dist(x0, y0, statef[0, 0], statef[1, 0])
+            dist = fast_euclidean_dist(x0, y0, statef[0, 0], statef[1, 0])
             new_x = x0 + dist*np.cos(new_heading)
             new_y = y0 + dist*np.sin(new_heading)
             if not bounds_check(new_x, new_y):

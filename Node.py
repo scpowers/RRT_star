@@ -2,7 +2,7 @@ import numpy as np
 from params import *
 from sympy import Point
 import matplotlib.pyplot as plt
-from utilities import fast_Euclidean_dist
+from utilities import fast_euclidean_dist
 
 
 class Node:
@@ -45,7 +45,7 @@ class Node:
         """Compute Euclidean distance between this node and a given node"""
         (x1, y1) = map(float, self.Point.coordinates)
         (x2, y2) = map(float, node.Point.coordinates)
-        return fast_Euclidean_dist(x1, y1, x2, y2)
+        return fast_euclidean_dist(x1, y1, x2, y2)
 
     def plot_node(self):
         """Plot this node in the current Matplotlib figure"""
@@ -103,7 +103,7 @@ class XYThetaNode(Node):
         """Get distance metric to a given node. The Euclidean distance was chosen for this node type."""
         (x1, y1, t1) = map(float, self.Point.coordinates)
         (x2, y2, t1) = map(float, node.Point.coordinates)
-        return fast_Euclidean_dist(x1, y1, x2, y2)
+        return fast_euclidean_dist(x1, y1, x2, y2)
 
     def plot_node(self):
         """Plot this node in the current Matplotlib figure"""
