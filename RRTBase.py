@@ -2,11 +2,35 @@ from Node import *
 from Obstacle import *
 from abc import ABC, abstractmethod
 import numpy as np
-from params import N_SAMPLES
-from tqdm import tqdm
 
 
 class RRTBase(ABC):
+    """
+    Abstract base class for rapidly-exploring random trees.
+
+    **Attribute**
+        T: **list, Node**
+            List of Node objects representing the tree
+        root: **Node**
+            Node object representing the root configuration
+        goal: **Node**
+            Node object representing the goal configuration
+        obs: **list, Obstacle**
+            List of Obstacle objects in the environment
+        goal_solution: **Node**
+            Node object representing the actual discovered goal node with a parent node and cost-to-come
+
+    **Methods**
+        * add_node: abstract method that derived classes must implement to add a node to the tree.
+        * sample_free: return a random Node outside of any obstacles
+        * is_node_free: return True if the node is not witin any obstacles
+        * is_path_free: return True if the node's path to parent does not intersect any obstacles
+        * get_nearest_node_idx: get index of the node closest to the given node within the tree
+        * is_close_to_goal: return True if a given node is close enough to the goal to call them equivalent
+        * build_tree: abstract method that derived classes must implement to build the tree
+        * visualize_tree: plot the tree's nodes and edges in the environment with obstacles
+
+    """
     def __init__(self, q_start, q_goal, obs):
         root = XYThetaNode(q_start[0], q_start[1], q_start[2])
         root.cost_to_come = 0.0
@@ -46,17 +70,11 @@ class RRTBase(ABC):
 
     @abstractmethod
     def build_tree(self):
-        for i in tqdm(range(N_SAMPLES)):
-            self.add_node()
-            if self.goal_solution is not None:
-                break
-                #pass
-        if self.goal_solution is None:
-            print('No path to goal found.')
-        else:
-            print('Found a path to the goal!')
+        """Build the tree"""
+        pass
 
     def visualize_tree(self):
+        """Plot the tree's nodes and edges in the environment with obstacles"""
         fig, ax = plt.subplots()
         for obs in self.obs:
             ax.add_patch(obs.plotting_object)
