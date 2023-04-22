@@ -12,29 +12,31 @@ class RRTStar(RRTBase):
     Class for rapidly-exploring random trees of the RRT* variety.
 
     **Attribute**
-        T: **list, Node**
-            List of Node objects representing the tree
-        root: **Node**
-            Node object representing the root configuration
-        goal: **Node**
-            Node object representing the goal configuration
-        obs: **list, Obstacle**
-            List of Obstacle objects in the environment
-        goal_solution: **Node**
-            Node object representing the actual discovered goal node with a parent node and cost-to-come
+
+    T: **list, Node**
+        List of Node objects representing the tree
+    root: **Node**
+        Node object representing the root configuration
+    goal: **Node**
+        Node object representing the goal configuration
+    obs: **list, Obstacle**
+        List of Obstacle objects in the environment
+    goal_solution: **Node**
+        Node object representing the actual discovered goal node with a parent node and cost-to-come
 
     **Methods**
-        * add_node: add a node to the tree.
-        * sample_free: return a random Node outside of any obstacles
-        * is_node_free: return True if the node is not witin any obstacles
-        * is_path_free: return True if the node's path to parent does not intersect any obstacles
-        * get_nearest_node_idx: get index of the node closest to the given node within the tree
-        * is_close_to_goal: return True if a given node is close enough to the goal to call them equivalent
-        * build_tree: build the tree
-        * visualize_tree: plot the tree's nodes and edges in the environment with obstacles
-        * get_nearby_node_idxs: get indices of nodes in the tree within a certain distance of the given node
-        * choose_best_parent: finds the best parent node for a given node by checking every neighbor in a given range
-        * rewire: see if nodes in a range around the given node can be re-routed cheaper through the given node
+
+    * add_node: add a node to the tree.
+    * sample_free: return a random Node outside of any obstacles
+    * is_node_free: return True if the node is not witin any obstacles
+    * is_path_free: return True if the node's path to parent does not intersect any obstacles
+    * get_nearest_node_idx: get index of the node closest to the given node within the tree
+    * is_close_to_goal: return True if a given node is close enough to the goal to call them equivalent
+    * build_tree: build the tree
+    * visualize_tree: plot the tree's nodes and edges in the environment with obstacles
+    * get_nearby_node_idxs: get indices of nodes in the tree within a certain distance of the given node
+    * choose_best_parent: finds the best parent node for a given node by checking every neighbor in a given range
+    * rewire: see if nodes in a range around the given node can be re-routed cheaper through the given node
 
     """
 
