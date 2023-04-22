@@ -2,7 +2,7 @@ import numpy as np
 from params import *
 from sympy import Point
 import matplotlib.pyplot as plt
-from OtherUtilities import fast_Euclidean_dist
+from utilities import fast_Euclidean_dist
 
 
 class Node:

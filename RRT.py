@@ -1,10 +1,10 @@
 from RRTBase import RRTBase
-from utilities import steer
+from steer_utilities import steer
 import numpy as np
 from params import GOAL_BIAS, N_SAMPLES
 from Node import XYThetaNode
-from utilities import path_cost
-from OtherUtilities import angle_check
+from steer_utilities import path_cost, angle_check
+#from OtherUtilities import angle_check
 from tqdm import tqdm
 
 

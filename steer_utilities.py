@@ -1,14 +1,66 @@
 import numpy as np
+from Node import XYThetaNode
+from utilities import fast_Euclidean_dist
 from numba import jit
-from params import PATH_TIME_DURATION, PATH_TIME_DISCRETIZATION, PATH_INITIAL_SPEED, PATH_FINAL_SPEED, \
-    DIST_BETWEEN_AXLES, MIN_STEER_ANGLE, MAX_STEER_ANGLE, HEADING_DIFF_THRESHOLD, GOAL_HEADING_DIFF_THRESHOLD, \
-    MAP_X_MIN, MAP_X_MAX, MAP_Y_MIN, MAP_Y_MAX, GOAL_DIST_THRESHOLD
+from params import *
 from sympy import Segment
 
 
-@jit(nopython=True)
-def fast_Euclidean_dist(x1, y1, x2, y2):
-    return np.sqrt((x2 - x1)**2 + (y2 - y1)**2)
+def steer(near_node: XYThetaNode, rand_node: XYThetaNode, allow_new_thetaf=True):
+    """
+    **Arguments**
+
+    near_node: **XYThetaNode**
+        Node object corresponding to the nearest existing node to the randomly sampled node rand_node
+    rand_node: **XYThetaNode**
+        Node object corresponding to the randomly sampled state
+    allow_new_thetaf: **bool**
+        Optional flag to allow the path generation sub-call to create a path to a state different from rand_node
+
+    **Returns**
+
+    path: **numpy array**
+        Path through state space between near_node and either rand_node or the nearest state found by the path func
+    collision_objects: **list, Sympy geometry objects**
+        List of Sympy geometry objects representing the path segment(s) via Segment objects for collision checking
+
+    """
+    # if the nodes are too close together in the x-y plane, return early
+    dist = near_node.dist_to_node(rand_node)
+    if dist < MIN_STEP:
+        return None, None
+
+    near_node_coords = np.array(list(map(float, near_node.Point.coordinates))).reshape(-1, 1)
+    rand_node_coords = np.array(list(map(float, rand_node.Point.coordinates))).reshape(-1, 1)
+
+    # if the distance between nodes is too large, move as much as you can in the correct direction
+    dx = rand_node_coords[0, 0] - near_node_coords[0, 0]
+    dy = rand_node_coords[1, 0] - near_node_coords[1, 0]
+    if dist > MAX_STEP:
+        close_enough_to_goal = False
+        scale = float(MAX_STEP / dist)
+        new_coords = near_node_coords + np.array([scale*dx, scale*dy, 0]).reshape(-1, 1)
+        new_coords[2, 0] = rand_node_coords[2, 0]
+    else:
+        new_coords = rand_node_coords
+        close_enough_to_goal = True
+
+    # generate trajectory to new coordinates from near node and associated Curve object for collision checking
+    # path, collision_objects, controls, valid_path = generate_trajectory(near_node_coords, new_coords)
+    new_coords_are_goal = rand_node.is_goal and close_enough_to_goal
+    path, collision_objects, controls, valid_path = generate_straight_path(near_node_coords, new_coords,
+                                                                           new_coords_are_goal, allow_new_thetaf)
+
+    # this is hit if the generated controls are beyond the steering control limits
+    if not valid_path:
+        return None, None
+
+    return path, collision_objects
+
+
+def path_cost(path_collision_objects):
+    """Return total cost across all segments in the path"""
+    return float(sum([segment.length for segment in path_collision_objects]))
 
 
 @jit(nopython=True)
@@ -202,3 +254,5 @@ def determine_delta_direction(theta0, thetaf):
 @jit(nopython=True)
 def bounds_check(x, y):
     return MAP_X_MIN <= x <= MAP_X_MAX and MAP_Y_MIN <= y <= MAP_Y_MAX
+
+
