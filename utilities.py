@@ -1,11 +1,28 @@
 import numpy as np
-from params import MAX_STEP, MIN_STEP, GOAL_DIST_THRESHOLD
-from sympy import Curve
+from params import MAX_STEP, MIN_STEP
 from Node import XYThetaNode
 from OtherUtilities import generate_trajectory, generate_straight_path
 
 
 def steer(near_node: XYThetaNode, rand_node: XYThetaNode, allow_new_thetaf=True):
+    """
+    **Arguments**
+
+    near_node: **XYThetaNode**
+        Node object corresponding to the nearest existing node to the randomly sampled node rand_node
+    rand_node: **XYThetaNode**
+        Node object corresponding to the randomly sampled state
+    allow_new_thetaf: **bool**
+        Optional flag to allow the path generation sub-call to create a path to a state different from rand_node
+
+    **Returns**
+
+    path: **numpy array**
+        Path through state space between near_node and either rand_node or the nearest state found by the path func
+    collision_objects: **list, Sympy geometry objects**
+        List of Sympy geometry objects representing the path segment(s) via Segment objects for collision checking
+
+    """
     # if the nodes are too close together in the x-y plane, return early
     dist = near_node.dist_to_node(rand_node)
     if dist < MIN_STEP:
@@ -27,7 +44,7 @@ def steer(near_node: XYThetaNode, rand_node: XYThetaNode, allow_new_thetaf=True)
         close_enough_to_goal = True
 
     # generate trajectory to new coordinates from near node and associated Curve object for collision checking
-    #path, collision_objects, controls, valid_path = generate_trajectory(near_node_coords, new_coords)
+    # path, collision_objects, controls, valid_path = generate_trajectory(near_node_coords, new_coords)
     new_coords_are_goal = rand_node.is_goal and close_enough_to_goal
     path, collision_objects, controls, valid_path = generate_straight_path(near_node_coords, new_coords,
                                                                            new_coords_are_goal, allow_new_thetaf)
@@ -40,6 +57,7 @@ def steer(near_node: XYThetaNode, rand_node: XYThetaNode, allow_new_thetaf=True)
 
 
 def path_cost(path_collision_objects):
+    """Return total cost across all segments in the path"""
     return float(sum([segment.length for segment in path_collision_objects]))
 
 
