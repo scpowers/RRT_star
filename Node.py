@@ -10,18 +10,20 @@ class Node:
     Base class for nodes.
 
     **Attributes**
-        Point: **sympy Point**
-            Point object corresponding to position in state space
-        parent: **Node**
-            Node object that is this node's parent in the tree
-        cost_to_come: **float or int**
-            cost to travel to this node via its parents from the root
-        path_to_parent: **numpy array**
-            array(s) of points describing the trajectory from the parent to this node in state space
+
+    Point: **sympy Point**
+        Point object corresponding to position in state space
+    parent: **Node**
+        Node object that is this node's parent in the tree
+    cost_to_come: **float or int**
+        cost to travel to this node via its parents from the root
+    path_to_parent: **numpy array**
+        array(s) of points describing the trajectory from the parent to this node in state space
 
     **Methods**
-        dist_to_node: get Euclidean distance to a given Node
-        plot_node: plot the node on the current Matplotlib figure
+
+    * dist_to_node: get Euclidean distance to a given Node
+    * plot_node: plot the node on the current Matplotlib figure
     """
     def __init__(self, states):
         """
@@ -54,22 +56,24 @@ class XYThetaNode(Node):
     Class for x-y-theta nodes.
 
     **Attributes**
-        Point: **sympy Point**
-            Point object corresponding to position in state space
-        parent: **Node**
-            Node object that is this node's parent in the tree
-        cost_to_come: **float or int**
-            cost to travel to this node via its parents from the root
-        path_to_parent: **numpy array**
-            array(s) of points describing the trajectory from the parent to this node in state space
-        yaw: **float**
-            Heading corresponding to this state vector
-        is_goal: **bool**
-            True if this node is a goal node
+
+    Point: **sympy Point**
+        Point object corresponding to position in state space
+    parent: **Node**
+        Node object that is this node's parent in the tree
+    cost_to_come: **float or int**
+        cost to travel to this node via its parents from the root
+    path_to_parent: **numpy array**
+        array(s) of points describing the trajectory from the parent to this node in state space
+    yaw: **float**
+        Heading corresponding to this state vector
+    is_goal: **bool**
+        True if this node is a goal node
 
     **Methods**
-        dist_to_node: get distance metric to a given Node
-        plot_node: plot the node on the current Matplotlib figure
+
+    * dist_to_node: get distance metric to a given Node
+    * plot_node: plot the node on the current Matplotlib figure
     """
     def __init__(self, x=None, y=None, theta=None):
         """
