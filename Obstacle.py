@@ -10,6 +10,7 @@ class Obstacle(ABC):
     Abstract base class for obstacles.
 
     **Methods**
+
     * is_within_obs: takes a Node object and returns True if the Node is within the Obstacle
     * line_collision_check: takes a list of Segment object and returns True if any Segment intersects the Obstacle
     """
@@ -29,12 +30,14 @@ class CircularObstacle(Obstacle):
     Class for 2D circular obstacles. This is a subclass of the Obstacle class.
 
     **Attributes**
+
     Circle: **sympy Circle**
         Sympy Circle object representing the obstacle.
     plotting_object: **Matplotlib pyplot patch**
         Matplotlib object representing the obstacle.
 
     **Methods**
+
     * is_within_obs: takes a Node object, and returns True if the Node is within the Obstacle
     * line_collision_check: takes a list of Segment object and returns True if any Segment intersects the Obstacle
     """
@@ -42,13 +45,14 @@ class CircularObstacle(Obstacle):
         """
         Constructor for circular obstacle.
 
-        Args:
-            x: **double or int**
-                x-coordinate of circle
-            y: **double or int**
-                y-coordinate of circle
-            r: **double or int**
-                radius of circle
+        **Arguments**
+
+        x: **double or int**
+            x-coordinate of circle
+        y: **double or int**
+            y-coordinate of circle
+        r: **double or int**
+            radius of circle
         """
         self.Circle = Circle(Point(x, y), r)
         self.plotting_object = mCircle((x, y), r)
@@ -73,12 +77,14 @@ class PolygonObstacle(Obstacle):
     Class for 2D polygonal obstacles. This is a subclass of the Obstacle class.
 
     **Attributes**
+
     Polygon: **sympy Polygon**
         Sympy Polygon object representing the obstacle.
     plotting_object: **Matplotlib pyplot patch**
         Matplotlib object representing the obstacle.
 
     **Methods**
+
     * is_within_obs: takes a Node object, and returns True if the Node is within the Obstacle
     * line_collision_check: takes a list of Segment object and returns True if any Segment intersects the Obstacle
     """
@@ -86,9 +92,10 @@ class PolygonObstacle(Obstacle):
         """
         Constructor for Polygon obstacle.
 
-        Args:
-            *points: **sequence of tuples**
-                Sequence of points (as tuples) that define the vertices of the polygon
+        **Arguments**
+
+        *points: **sequence of tuples**
+            Sequence of points (as tuples) that define the vertices of the polygon
         """
         self.Polygon = Polygon(*points)
         self.plotting_object = mPolygon(list(points))
