@@ -9,8 +9,9 @@ class Obstacle(ABC):
     """
     Abstract base class for obstacles.
 
-    ** Methods **
-    is_within_obs: takes a Node object, and returns True if the Node is within the Obstacle
+    **Methods**
+    * is_within_obs: takes a Node object and returns True if the Node is within the Obstacle
+    * line_collision_check: takes a list of Segment object and returns True if any Segment intersects the Obstacle
     """
     @abstractmethod
     def is_within_obs(self, node: Node) -> bool:
@@ -27,13 +28,15 @@ class CircularObstacle(Obstacle):
     """
     Class for 2D circular obstacles. This is a subclass of the Obstacle class.
 
-    ** Attributes **
-    x: x-coordinate of center
-    y: y-coordinate of center
-    r: radius of obstacle
+    **Attributes**
+    Circle: **sympy Circle**
+        Sympy Circle object representing the obstacle.
+    plotting_object: **Matplotlib pyplot patch**
+        Matplotlib object representing the obstacle.
 
-    ** Methods **
-    is_within_obs: takes a Node object, and returns True if the Node is within the Obstacle
+    **Methods**
+    * is_within_obs: takes a Node object, and returns True if the Node is within the Obstacle
+    * line_collision_check: takes a list of Segment object and returns True if any Segment intersects the Obstacle
     """
     def __init__(self, x, y, r):
         """
@@ -66,6 +69,19 @@ class CircularObstacle(Obstacle):
 
 
 class PolygonObstacle(Obstacle):
+    """
+    Class for 2D polygonal obstacles. This is a subclass of the Obstacle class.
+
+    **Attributes**
+    Polygon: **sympy Polygon**
+        Sympy Polygon object representing the obstacle.
+    plotting_object: **Matplotlib pyplot patch**
+        Matplotlib object representing the obstacle.
+
+    **Methods**
+    * is_within_obs: takes a Node object, and returns True if the Node is within the Obstacle
+    * line_collision_check: takes a list of Segment object and returns True if any Segment intersects the Obstacle
+    """
     def __init__(self, *points):
         """
         Constructor for Polygon obstacle.
