@@ -4,7 +4,6 @@ import numpy as np
 from params import GOAL_BIAS, N_SAMPLES
 from Node import XYThetaNode
 from steer_utilities import path_cost, angle_check
-#from OtherUtilities import angle_check
 from tqdm import tqdm
 
 
@@ -13,26 +12,28 @@ class RRT(RRTBase):
     Class for rapidly-exploring random trees in their original form.
 
     **Attribute**
-        T: **list, Node**
-            List of Node objects representing the tree
-        root: **Node**
-            Node object representing the root configuration
-        goal: **Node**
-            Node object representing the goal configuration
-        obs: **list, Obstacle**
-            List of Obstacle objects in the environment
-        goal_solution: **Node**
-            Node object representing the actual discovered goal node with a parent node and cost-to-come
+
+    T: **list, Node**
+        List of Node objects representing the tree
+    root: **Node**
+        Node object representing the root configuration
+    goal: **Node**
+        Node object representing the goal configuration
+    obs: **list, Obstacle**
+        List of Obstacle objects in the environment
+    goal_solution: **Node**
+        Node object representing the actual discovered goal node with a parent node and cost-to-come
 
     **Methods**
-        * add_node: add a node to the tree.
-        * sample_free: return a random Node outside of any obstacles
-        * is_node_free: return True if the node is not witin any obstacles
-        * is_path_free: return True if the node's path to parent does not intersect any obstacles
-        * get_nearest_node_idx: get index of the node closest to the given node within the tree
-        * is_close_to_goal: return True if a given node is close enough to the goal to call them equivalent
-        * build_tree: build the tree
-        * visualize_tree: plot the tree's nodes and edges in the environment with obstacles
+
+    * add_node: add a node to the tree.
+    * sample_free: return a random Node outside of any obstacles
+    * is_node_free: return True if the node is not witin any obstacles
+    * is_path_free: return True if the node's path to parent does not intersect any obstacles
+    * get_nearest_node_idx: get index of the node closest to the given node within the tree
+    * is_close_to_goal: return True if a given node is close enough to the goal to call them equivalent
+    * build_tree: build the tree
+    * visualize_tree: plot the tree's nodes and edges in the environment with obstacles
 
     """
 
