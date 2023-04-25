@@ -3,7 +3,6 @@ from Node import *
 from steer_utilities import steer, path_cost, angle_check
 import numpy as np
 from params import GOAL_BIAS, NEAR_DIST_THRESHOLD, GAMMA_STAR, MAX_STEP, N_SAMPLES
-#from OtherUtilities import angle_check
 from tqdm import tqdm
 
 
