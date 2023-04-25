@@ -152,7 +152,6 @@ class RRTStar(RRTBase):
 
             if new_cost_to_come < tmp_near_node.cost_to_come:
                 # actually cheaper to go to new_node first instead of the original parent of this iterating near node
-                print('rewired a node')
                 tmp_near_node.parent = new_node
                 tmp_near_node.cost_to_come = new_cost_to_come
                 tmp_near_node.path_to_parent = (path, collision_objects)
