@@ -65,14 +65,17 @@ def path_cost(path_collision_objects):
 
 @jit(nopython=True)
 def car_h(state):
+    """Get flat output variables from the state"""
     return state[0:-1]
 
 
 def psi(y, ydot):
+    """Get state from the flat output and its first time derivative"""
     return np.array([y[0], y[1], np.arctan2(ydot[1], ydot[0])])
 
 
 def alpha(y, ydot, yddot):
+    """Get controls from the flat output and its first and second time derivatives"""
     u1 = np.linalg.norm(ydot)
     num = yddot[1, 0]*ydot[0, 0] - yddot[0, 0]*ydot[1, 0]
     u2 = np.arctan(DIST_BETWEEN_AXLES * num / (np.linalg.norm(ydot)**3))
@@ -85,27 +88,32 @@ def alpha(y, ydot, yddot):
 
 @jit(nopython=True)
 def lambdafunc(t):
+    """Get lambda(t) for flat output computation"""
     return np.array([t**3, t**2, t, 1]).reshape(-1, 1)
 
 
 @jit(nopython=True)
 def dlambdafunc(t):
+    """Get lambda'(t) for flat output computation"""
     return np.array([3*t**2, 2*t, 1, 0]).reshape(-1, 1)
 
 
 @jit(nopython=True)
 def ddlambdafunc(t):
+    """Get lambda''(t) for flat output computation"""
     return np.array([6*t, 2, 0, 0]).reshape(-1, 1)
 
 
 @jit(nopython=True)
 def poly3_coeff(y0, dy0, yf, dyf, t1, t2):
+    """Get polynomial basis function coefficients given flat outputs, their derivatives, and time boundary conditions"""
     Y = np.hstack((y0, dy0, yf, dyf))
     L = np.hstack((lambdafunc(t1), dlambdafunc(t1), lambdafunc(t2), dlambdafunc(t2)))
     return Y @ np.linalg.inv(L)
 
 
 def generate_trajectory(state0, statef):
+    """Compute trajectory in flat output space and convert back to state space along with required controls"""
     T = PATH_TIME_DURATION
     y0 = car_h(state0)
     yf = car_h(statef)
@@ -145,6 +153,7 @@ def generate_trajectory(state0, statef):
 
 
 def generate_straight_path(state0, statef, statef_is_goal, allow_new_thetaf=True):
+    """Try to create a drivable straight path between two states, and try go to a nearby feasible state otherwise"""
     # first, compute heading that will be assigned to statef because of this line
     # (heading for a given state = heading along path going to that state from parent)
     new_heading = np.arctan2(statef[1, 0] - state0[1, 0], statef[0, 0] - state0[0, 0])
@@ -192,6 +201,7 @@ def generate_straight_path(state0, statef, statef_is_goal, allow_new_thetaf=True
 
 @jit(nopython=True)
 def angle_check(theta0, thetaf, goal_check=False):
+    """Return True if the heading difference between theta0 and thetaf is acceptably small"""
     if goal_check:
         THRESHOLD = GOAL_HEADING_DIFF_THRESHOLD
     else:
@@ -224,6 +234,7 @@ def angle_check(theta0, thetaf, goal_check=False):
 # return sign of angle to add to theta0 to go towards thetaf (in the closest way)
 # +1: add positive angle to theta0, -1: add negative angle to theta0
 def determine_delta_direction(theta0, thetaf):
+    """Return +1 if heading should be added to theta0 to move towards thetaf, and -1 otherwise"""
     if np.sign(theta0) == np.sign(thetaf):
         return np.sign(thetaf-theta0)
     else:
@@ -253,6 +264,7 @@ def determine_delta_direction(theta0, thetaf):
 
 @jit(nopython=True)
 def bounds_check(x, y):
+    """Return True if the given (x, y) pair is within the map bounds"""
     return MAP_X_MIN <= x <= MAP_X_MAX and MAP_Y_MIN <= y <= MAP_Y_MAX
 
 
