@@ -66,7 +66,7 @@ class RRTStar(RRTBase):
         nearby_idxs = self.get_nearby_node_idxs(new_node)
 
         # choose the best parent node for the new node, not just choosing the nearest one like RRT
-        (new_node, best_parent_index) = self.choose_best_parent(rand_node, new_node, nearby_idxs)
+        (new_node, best_parent_index) = self.choose_best_parent(new_node, nearby_idxs)
         if new_node is None:
             return
 
@@ -95,7 +95,7 @@ class RRTStar(RRTBase):
                 node_idxs.append(i)
         return node_idxs
 
-    def choose_best_parent(self, rand_node, new_node, nearby_idxs):
+    def choose_best_parent(self, new_node, nearby_idxs):
         """Find the best parent node for a given node by checking every neighbor in a given range"""
         # choose best parent node for new_node by looking at each nearby node and their associated costs
         best_parent_index = None  # this was the original nearest node
