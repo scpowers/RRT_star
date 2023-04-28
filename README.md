@@ -4,7 +4,7 @@ with drivable paths between nodes. An initial implementation generated feasible 
 using the differential flatness property of a simple car-like model, but since sampling in state space
 (x, y, yaw) proved to be computationally expensive, feasible trajectories are instead computed using
 a maximum heading difference between nodes with a non-zero minimum distance between nodes. This allows the nodes
-to be sampled in (x, y) space, which is substantially cheaper computationally. 
+to be sampled in (x, y) space, which is substantially cheaper computationally. While this speed increase is substantial, the non-zero minimum distance between nodes can create dead zones, which can thereby sometimes prevent the algorithm from finding a solution to the goal.
 
 The high-level inheritance structure between RRTBase, RRT, and RRTStar is 
 inspired by the following implementation: https://github.com/danny45s/motion-planning
