@@ -9,6 +9,13 @@ to be sampled in (x, y) space, which is substantially cheaper computationally. W
 The high-level inheritance structure between RRTBase, RRT, and RRTStar is 
 inspired by the following implementation: https://github.com/danny45s/motion-planning
 
+### Dependencies
+* numpy
+* numba
+* matplotlib
+* sympy
+* tqdm
+
 To use it:
 1. create a list of Obstacle objects (either circular or polygonal)
 2. specify an initial pose (x, y, yaw)
