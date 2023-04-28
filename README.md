@@ -16,7 +16,8 @@ inspired by the following implementation: https://github.com/danny45s/motion-pla
 * sympy
 * tqdm
 
-To use it:
+### Usage
+To use this implementation in a main file that is executed:
 1. create a list of Obstacle objects (either circular or polygonal)
 2. specify an initial pose (x, y, yaw)
 3. specify a final pose
