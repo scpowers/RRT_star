@@ -1,4 +1,5 @@
 # RRT/RRT* for a simple car-like vehicle
+### Project Overview
 This is the code for my Software Carpentry final project. It builds either RRTs or RRT*s
 with drivable paths between nodes. An initial implementation generated feasible sub-trajectories
 using the differential flatness property of a simple car-like model, but since sampling in state space
@@ -6,7 +7,10 @@ using the differential flatness property of a simple car-like model, but since s
 a maximum heading difference between nodes with a non-zero minimum distance between nodes. This allows the nodes
 to be sampled in (x, y) space, which is substantially cheaper computationally. While this speed increase is substantial, the non-zero minimum distance between nodes can create dead zones, which can thereby sometimes prevent the algorithm from finding a solution to the goal.
 
-The high-level inheritance structure between RRTBase, RRT, and RRTStar is 
+### Acknowledgements
+* The RRT algorithm is from this paper: http://msl.cs.illinois.edu/~lavalle/papers/Lav98c.pdf
+* The RRT* algorithm is from this paper: https://arxiv.org/abs/1105.1186
+* The high-level inheritance structure between RRTBase, RRT, and RRTStar is 
 inspired by the following implementation: https://github.com/danny45s/motion-planning
 
 ### Dependencies
