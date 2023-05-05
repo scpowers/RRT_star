@@ -9,8 +9,6 @@ to be sampled in (x, y) space, which is substantially cheaper computationally. W
 
 Notably, this implementation supports arbitrarily-shaped obstacles through the use of Sympy Polygon objects!
 
-![example](https://user-images.githubusercontent.com/54383192/236501635-5063f09d-2deb-49cb-a8bd-64de06844e46.png)
-
 ### Dependencies
 * numpy - ``conda install numpy``
 * numba - ``conda install numba``
@@ -27,7 +25,9 @@ To use this implementation in a main file that is executed:
 5. run tree.build() to construct the tree
 6. run tree.visualize() to view the tree
 
-An example usage is given in ``run.py``. 
+An example usage is given in ``run.py``. Since the algorithm is stochastic in nature, the output will change every time, but an example solution from the given ``run.py`` file is shown below. The solution is highlighted in magenta, with the start configuration at the bottom left and the goal configuration at the other end of the highlighted path.
+
+![example](https://user-images.githubusercontent.com/54383192/236501635-5063f09d-2deb-49cb-a8bd-64de06844e46.png)
 
 **Note:** in the current implementation, an RRT will stop building the tree
 as soon as a path to the goal is found, whereas an RRT* will attempt to add 
