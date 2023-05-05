@@ -1,14 +1,15 @@
 # RRT/RRT* for a simple car-like vehicle
 ### Project Overview
-![example](https://user-images.githubusercontent.com/54383192/236500759-54a2878f-f571-4e6e-8ffa-f6eeef57be03.png)
-
-
 This is the code for my Software Carpentry final project. It builds either RRTs or RRT*s
 with drivable paths between nodes. An initial implementation generated feasible sub-trajectories
 using the differential flatness property of a simple car-like model, but since sampling in state space
 (x, y, yaw) proved to be computationally expensive, feasible trajectories are instead computed using
 a maximum heading difference between nodes with a non-zero minimum distance between nodes. This allows the nodes
-to be sampled in (x, y) space, which is substantially cheaper computationally. While this speed increase is substantial, the non-zero minimum distance between nodes can create dead zones, which can thereby sometimes prevent the algorithm from finding a solution to the goal.
+to be sampled in (x, y) space, which is substantially cheaper computationally. While this speed increase is substantial, the non-zero minimum distance between nodes can create dead zones, which can thereby sometimes prevent the algorithm from finding a solution to the goal. 
+
+Notably, this implementation supports arbitrarily-shaped obstacles through the use of Sympy Polygon objects!
+
+<img width="188" alt="image" src="https://user-images.githubusercontent.com/54383192/236501418-89a6ffcc-c7c7-407a-abd9-6bb6e8b00ef3.png">
 
 ### Dependencies
 * numpy - ``conda install numpy``
