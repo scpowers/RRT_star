@@ -1,5 +1,7 @@
 # RRT/RRT* for a simple car-like vehicle
 ### Project Overview
+<img width="188" alt="image" src="https://user-images.githubusercontent.com/54383192/236497105-7518be4d-34fd-481c-b369-ad1ba0f98bfb.png">
+
 This is the code for my Software Carpentry final project. It builds either RRTs or RRT*s
 with drivable paths between nodes. An initial implementation generated feasible sub-trajectories
 using the differential flatness property of a simple car-like model, but since sampling in state space
