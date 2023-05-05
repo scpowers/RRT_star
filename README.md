@@ -7,18 +7,12 @@ using the differential flatness property of a simple car-like model, but since s
 a maximum heading difference between nodes with a non-zero minimum distance between nodes. This allows the nodes
 to be sampled in (x, y) space, which is substantially cheaper computationally. While this speed increase is substantial, the non-zero minimum distance between nodes can create dead zones, which can thereby sometimes prevent the algorithm from finding a solution to the goal.
 
-### Acknowledgements
-* The RRT algorithm is from this paper: http://msl.cs.illinois.edu/~lavalle/papers/Lav98c.pdf
-* The RRT* algorithm is from this paper: https://arxiv.org/abs/1105.1186
-* The high-level inheritance structure between RRTBase, RRT, and RRTStar is 
-inspired by the following implementation: https://github.com/danny45s/motion-planning
-
 ### Dependencies
-* numpy
-* numba
-* matplotlib
-* sympy
-* tqdm
+* numpy - ``conda install numpy``
+* numba - ``conda install numba``
+* matplotlib - ``conda install matplotlib``
+* sympy - ``conda install sympy``
+* tqdm - ``conda install -c conda-forge tqdm``
 
 ### Usage
 To use this implementation in a main file that is executed:
@@ -36,3 +30,9 @@ as soon as a path to the goal is found, whereas an RRT* will attempt to add
 a fixed number of nodes (specified by the N_SAMPLES parameter in ``params.py``).
 This is because a major advantage of RRT* is that it will rewire nodes if a cheaper
 path becomes available, so the path to the goal can change accordingly. 
+
+### Acknowledgements
+* The RRT algorithm is from this paper: http://msl.cs.illinois.edu/~lavalle/papers/Lav98c.pdf
+* The RRT* algorithm is from this paper: https://arxiv.org/abs/1105.1186
+* The high-level inheritance structure between RRTBase, RRT, and RRTStar is 
+inspired by the following implementation: https://github.com/danny45s/motion-planning
