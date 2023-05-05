@@ -1,6 +1,7 @@
 # RRT/RRT* for a simple car-like vehicle
 ### Project Overview
-<img width="188" alt="image" src="https://user-images.githubusercontent.com/54383192/236497105-7518be4d-34fd-481c-b369-ad1ba0f98bfb.png">
+![example](https://user-images.githubusercontent.com/54383192/236500759-54a2878f-f571-4e6e-8ffa-f6eeef57be03.png)
+
 
 This is the code for my Software Carpentry final project. It builds either RRTs or RRT*s
 with drivable paths between nodes. An initial implementation generated feasible sub-trajectories
