@@ -1,5 +1,15 @@
 # RRT/RRT* for a simple car-like vehicle
-### Project Overview
+<details>
+  <summary>Table of Contents</summary>
+  <ol>
+    <li><a href="#overview">Overview</a></li>
+    <li><a href="#dependencies">Dependencies</a></li>
+    <li><a href="#usage">Usage</a></li>
+    <li><a href="#acknowledgements">Acknowledgments</a></li>
+  </ol>
+</details>
+
+### Overview
 This is the code for my Software Carpentry final project. It builds either RRTs or RRT*s
 with drivable paths between nodes. An initial implementation generated feasible sub-trajectories
 using the differential flatness property of a simple car-like model, but since sampling in state space
@@ -22,8 +32,8 @@ To use this implementation in a main file that is executed:
 2. specify an initial pose (x, y, yaw)
 3. specify a final pose
 4. create a tree object (either RRT or RRT*) using items 1-3
-5. run tree.build() to construct the tree
-6. run tree.visualize() to view the tree
+5. call tree.build() to construct the tree
+6. call tree.visualize() to view the tree
 
 An example usage is given in ``run.py``. Since the algorithm is stochastic in nature, the output will change every time, but an example solution from the given ``run.py`` file is shown below. The solution is highlighted in magenta, with the start configuration at the bottom left and the goal configuration at the other end of the highlighted path.
 
@@ -40,3 +50,4 @@ path becomes available, so the path to the goal can change accordingly.
 * The RRT* algorithm is from this paper: https://arxiv.org/abs/1105.1186
 * The high-level inheritance structure between RRTBase, RRT, and RRTStar is 
 inspired by the following implementation: https://github.com/danny45s/motion-planning
+* Elements of this README are styled after this example: https://github.com/othneildrew/Best-README-Template
