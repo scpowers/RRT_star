@@ -9,7 +9,7 @@ to be sampled in (x, y) space, which is substantially cheaper computationally. W
 
 Notably, this implementation supports arbitrarily-shaped obstacles through the use of Sympy Polygon objects!
 
-<img width="188" alt="image" src="https://user-images.githubusercontent.com/54383192/236501418-89a6ffcc-c7c7-407a-abd9-6bb6e8b00ef3.png">
+![example](https://user-images.githubusercontent.com/54383192/236501635-5063f09d-2deb-49cb-a8bd-64de06844e46.png)
 
 ### Dependencies
 * numpy - ``conda install numpy``
